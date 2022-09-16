@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { CssBaseline, Divider, Drawer, IconButton, Toolbar, Typography } from "@mui/material";
+import { CssBaseline, Divider, Drawer, IconButton, Paper, Toolbar, Typography } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled, useTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
@@ -83,7 +83,9 @@ export default function PersistentAppDrawer({ children, project }) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant='h6' noWrap component='div'>Title</Typography>
+                    <Typography variant='h6' noWrap component='div'>
+                        {/* Title */}
+                    </Typography>
                 </Toolbar>
             </AppBar>
 
@@ -107,8 +109,49 @@ export default function PersistentAppDrawer({ children, project }) {
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                {/* Drawer contents here */}
-                drawer contents
+                <Paper elevation={2} sx={{
+                    flexGrow: 1,
+                    padding: '10px',
+                    margin: '10px',
+                    maxHeight: '100%',
+                    overflow: 'auto',
+                }}>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                    Contents <br/>
+                </Paper>
+                <Divider />
+                <Paper sx={{
+                    padding: '10px',
+                }}>
+                buttons <br/>
+                    buttons <br/>
+                    buttons <br/>
+                    buttons <br/>
+                    buttons <br/>
+                    buttons <br/>
+                </Paper>
             </Drawer>
             <Main open={open}>
                 <DrawerHeader />
