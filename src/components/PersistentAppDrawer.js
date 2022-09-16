@@ -54,7 +54,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }))
 
 
-export default function PersistentAppDrawer({children}) {
+export default function PersistentAppDrawer({ children, project }) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
