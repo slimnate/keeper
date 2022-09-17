@@ -66,7 +66,7 @@ export default function ProjectPanel({ project, onUpdateImage }) {
                     />
                     <TextField
                         id='project-base-path'
-                        label='Project Path'
+                        label='Project Folder'
                         variant='outlined'
                         value={project.basePath}
                         size='small'
@@ -84,9 +84,9 @@ export default function ProjectPanel({ project, onUpdateImage }) {
                     />
                     <TextField
                         id='project-export-path'
-                        label='Export Path'
+                        label='Export Folder'
                         variant='outlined'
-                        value={project.basePath}
+                        value={project.exportPath}
                         size='small'
                         InputProps={{
                             endAdornment: (

@@ -15,8 +15,8 @@ const testImages = [...Array(testImageCount).keys()].map((img, i) => {
 const testProject = {
     name: 'Test Project',
     basePath: textBasePath,
-    exportPath: path.join(__dirname, 'keepers'),
-    projectFile: path.join(__dirname, 'Test Project.keep'),
+    exportPath: 'keepers',
+    projectFile: path.join(textBasePath, 'Test Project.keep'),
     images: testImages,
 };
 
