@@ -1,16 +1,28 @@
 import { FolderOpen } from "@mui/icons-material";
-import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, TextField, InputAdornment, IconButton } from "@mui/material";
+import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, TextField, InputAdornment, IconButton, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
+import path from "path-browserify";
 
 
-export default function ProjectPanel({ project, onUpdateImage }) {
-
+export default function ProjectPanel({ project, onUpdateImage, onUpdateProject }) {
     function handleBrowseForProjectFolder() {
+        window.electronAPI.openFolder().then((path) => {
+            console.log(path);
 
+            if(path === undefined) return;
+
+            onUpdateProject({
+                ...project,
+                basePath: path
+            })
+        });
     }
 
-    function handleBrowseForExportFolder() {
-
+    function handleExportFolderTextChange(e) {
+        onUpdateProject({
+            ...project,
+            exportPath: e.target.value
+        })
     }
 
     const handleToggleKeep = (id) => () => {
@@ -39,6 +51,7 @@ export default function ProjectPanel({ project, onUpdateImage }) {
             />
         </ListItem>
     });
+    const exportFullPath = path.join(project.basePath, project.exportPath);
     
     return (
         <>
@@ -88,18 +101,11 @@ export default function ProjectPanel({ project, onUpdateImage }) {
                         variant='outlined'
                         value={project.exportPath}
                         size='small'
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position='end'>
-                                    <Tooltip title='Browse for folder'>
-                                        <IconButton edge='end' color='default' onClick={handleBrowseForExportFolder}>
-                                            <FolderOpen />
-                                        </IconButton>
-                                    </Tooltip>
-                                </InputAdornment>
-                            )
-                        }}
+                        onChange={handleExportFolderTextChange}
                     />
+                    <Tooltip title='Full path to export folder' enterDelay={1000}>
+                        <Typography variant='subtitle2' fontSize={8}>{exportFullPath}</Typography>
+                    </Tooltip>
                     <ButtonGroup fullWidth={true}>
                         <Tooltip title='Export the selected images to the export folder'>
                             <Button variant='contained' color="secondary">Export</Button>

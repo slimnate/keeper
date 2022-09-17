@@ -1,7 +1,15 @@
 const path = require('path');
 
-const { app, BrowserWindow, protocol } = require('electron');
+const { app, BrowserWindow, protocol, dialog, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
+
+
+function handleFolderOpen() {
+    const filePaths = dialog.showOpenDialogSync({
+        properties: ['openDirectory']
+    })
+    return filePaths;
+}
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -25,12 +33,16 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    //register atom protocol
     protocol.registerFileProtocol('atom', (req, cb) => {
         const url = req.url;
-        console.log(url);
         cb({ path: url.substring(7) });
     });
 
+    //register ipc event handlers
+    ipcMain.handle('dialog:openFolder', handleFolderOpen);
+
+    //create window
     createWindow();
 });
 

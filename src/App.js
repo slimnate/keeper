@@ -19,10 +19,15 @@ function App() {
     })
   }
 
+  const handleUpdateProject = (newProject) => {
+    setProject(newProject)
+  } 
+
   return (
     <PersistentAppDrawer
       project={project}
       onUpdateImage={handleImageUpdate}
+      onUpdateProject={handleUpdateProject}
     >
       <ImageEditor project={ project.images[selectedImage] || null } />
     </PersistentAppDrawer>

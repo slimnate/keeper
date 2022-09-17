@@ -1,5 +1,5 @@
 const path = require('path');
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 const textBasePath = path.join(__dirname, '../')
 
@@ -21,3 +21,6 @@ const testProject = {
 };
 
 contextBridge.exposeInMainWorld('testProject', testProject);
+contextBridge.exposeInMainWorld('electronAPI', {
+    openFolder: () => ipcRenderer.invoke('dialog:openFolder'),
+})
