@@ -7,8 +7,8 @@ const testImageCount = 15
 const testImages = [...Array(testImageCount).keys()].map((img, i) => {
     return {
         id: i,
-        relativePath: 'logo-512.png',
-        path: path.join(__dirname, 'logo-512.png'),
+        relativePath: 'logo512.png',
+        path: path.join(__dirname, 'logo512.png'),
         keep: false,
     }
 })

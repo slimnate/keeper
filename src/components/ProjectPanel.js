@@ -1,7 +1,24 @@
-import { Divider, Paper } from "@mui/material";
+import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme } from "@mui/material";
 
 
 export default function ProjectPanel({ project }) {
+    const imageListItems = project.images.map(({ id, path, relativePath, keep }) => {
+        return <ListItem key={id} >
+            <ListItemAvatar>
+                <Avatar
+                    alt=''
+                    src={`atom://${path}`}
+                />
+            </ListItemAvatar>
+            <ListItemText>{relativePath}</ListItemText>
+            <Switch
+                edge='end'
+                onChange={handleToggleKeep(id)}
+                checked={keep}
+                color={keep ? 'success' : 'warning' }
+            />
+        </ListItem>
+    });
     
     return (
         <>
@@ -11,30 +28,9 @@ export default function ProjectPanel({ project }) {
                 maxHeight: '100%',
                 overflow: 'auto',
             }}>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
-                Contents <br/>
+                <List dense>
+                    {imageListItems}
+                </List>
             </Paper>
             <Divider />
             <Paper sx={{

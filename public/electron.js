@@ -1,6 +1,6 @@
 const path = require('path');
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, protocol } = require('electron');
 const isDev = require('electron-is-dev');
 
 function createWindow() {
@@ -24,7 +24,15 @@ function createWindow() {
     }
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+    protocol.registerFileProtocol('atom', (req, cb) => {
+        const url = req.url;
+        console.log(url);
+        cb({ path: url.substring(7) });
+    });
+
+    createWindow();
+});
 
 
 app.on('window-all-closed', () => {
