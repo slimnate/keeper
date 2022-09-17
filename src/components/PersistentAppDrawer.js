@@ -45,15 +45,6 @@ const AppBar = styled(MuiAppBar, {
     })
 }));
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-}))
-
-
 export default function PersistentAppDrawer({ children, project }) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
@@ -70,7 +61,7 @@ export default function PersistentAppDrawer({ children, project }) {
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position='fixed' open={open}>
-                <Toolbar>
+                <Toolbar variant='dense'>
                     <IconButton
                         color='inherit'
                         aria-label='open drawer'
@@ -102,12 +93,12 @@ export default function PersistentAppDrawer({ children, project }) {
                 anchor='left'
                 open={open}
             >
-                <DrawerHeader>
-                    <Typography variant='h6' noWrap component='div'>Project</Typography>
+                <Toolbar variant='dense'>
+                    <Typography variant='h6' noWrap component='div' flexGrow={1} flexDirection='row' align="center">Project</Typography>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'ltr' ? <ChevronLeft /> : <ChevronRight />}
                     </IconButton>
-                </DrawerHeader>
+                </Toolbar>
                 <Divider />
                 <Paper elevation={2} sx={{
                     flexGrow: 1,
@@ -154,7 +145,7 @@ export default function PersistentAppDrawer({ children, project }) {
                 </Paper>
             </Drawer>
             <Main open={open}>
-                <DrawerHeader />
+                <Toolbar />
                 {children}
             </Main>
         </Box>
