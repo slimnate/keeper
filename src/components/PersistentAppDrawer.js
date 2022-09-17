@@ -9,7 +9,7 @@ import { useState } from "react";
 
 import ProjectPanel from "./ProjectPanel";
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
     ({ theme, open }) => ({
