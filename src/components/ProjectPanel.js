@@ -1,4 +1,5 @@
-import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme } from "@mui/material";
+import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, TextField, useTheme } from "@mui/material";
+import { Stack } from "@mui/system";
 
 
 export default function ProjectPanel({ project, onUpdateImage }) {
@@ -45,7 +46,19 @@ export default function ProjectPanel({ project, onUpdateImage }) {
             <Paper sx={{
                 padding: '10px',
             }}>
-                {project.name}
+                <Stack direction='column' spacing={1}>
+                    <TextField id='project-name' label='Project Name' variant='outlined' value={project.name} size='small'/>
+                    <TextField id='project-base-path' label='Project Path' variant='outlined' value={project.basePath} size='small'/>
+                    <TextField id='project-export-path' label='Export Path' variant='outlined' value={project.basePath} size='small'/>
+                    <ButtonGroup fullWidth={true}>
+                        <Tooltip title='Export the selected images to the export folder'>
+                            <Button variant='contained' color="secondary">Export</Button>
+                        </Tooltip>
+                        <Tooltip title='Save changes to project'>
+                            <Button variant='contained'>Save</Button>
+                        </Tooltip>
+                    </ButtonGroup>
+                </Stack>
             </Paper>
         </>
     )
