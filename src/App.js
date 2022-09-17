@@ -7,29 +7,8 @@ import '@fontsource/roboto/700.css';
 import PersistentAppDrawer from './components/PersistentAppDrawer';
 import { useState } from 'react';
 
-const testProject = {
-  name: 'Test Project',
-  basePath: './',
-  exportPath: './keepers',
-  projectFile: './Test Project.keep',
-  images: [
-    {
-      path: '/image-1.png',
-      keep: false,
-    },
-    {
-      path: '/image-2.png',
-      keep: false,
-    },
-    {
-      path: '/image-3.png',
-      keep: false,
-    },
-  ],
-}
-
 function App() {
-  const project = useState(testProject);
+  const [project, setProject] = useState(window.testProject);
 
   return (
     <PersistentAppDrawer project={project}>

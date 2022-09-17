@@ -40,12 +40,7 @@ export default function ProjectPanel({ project }) {
             <Paper sx={{
                 padding: '10px',
             }}>
-            buttons <br/>
-                buttons <br/>
-                buttons <br/>
-                buttons <br/>
-                buttons <br/>
-                buttons <br/>
+                {project.name}
             </Paper>
         </>
     )

@@ -8,7 +8,8 @@ function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: path.join(__dirname, 'preload.js'),
         },
     });
 
@@ -25,13 +26,16 @@ function createWindow() {
 
 app.whenReady().then(createWindow);
 
+
 app.on('window-all-closed', () => {
+    // don't exit process on mac even if all windows closed
     if(process.platform !== 'darwin') {
         app.quit();
     }
 });
 
 app.on('activate', () => {
+    // if no active windows, create new one
     if(BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
