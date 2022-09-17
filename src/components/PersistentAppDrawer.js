@@ -48,7 +48,7 @@ const AppBar = styled(MuiAppBar, {
     })
 }));
 
-export default function PersistentAppDrawer({ children, project }) {
+export default function PersistentAppDrawer({ children, project, onUpdateImage }) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
@@ -103,7 +103,7 @@ export default function PersistentAppDrawer({ children, project }) {
                     </IconButton>
                 </Toolbar>
                 <Divider />
-                <ProjectPanel project={project}/>
+                <ProjectPanel project={project} onUpdateImage={onUpdateImage} />
             </Drawer>
             <Main open={open}>
                 <Toolbar />

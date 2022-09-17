@@ -12,8 +12,18 @@ function App() {
   const [project, setProject] = useState(window.testProject);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const handleImageUpdate = (newImage) => {
+    setProject({
+      ...project,
+      images: project.images.map((image) => image.id === newImage.id ? newImage : image)
+    })
+  }
+
   return (
-    <PersistentAppDrawer project={project}>
+    <PersistentAppDrawer
+      project={project}
+      onUpdateImage={handleImageUpdate}
+    >
       <ImageEditor project={ project.images[selectedImage] || null } />
     </PersistentAppDrawer>
   );
