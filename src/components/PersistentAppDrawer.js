@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { CssBaseline, Divider, Drawer, IconButton, Toolbar, Typography } from "@mui/material";
+import { CssBaseline, Divider, Drawer, IconButton, Toolbar, Typography, Tooltip } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled, useTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
@@ -50,7 +50,7 @@ const AppBar = styled(MuiAppBar, {
 
 export default function PersistentAppDrawer({ children, project, onUpdateImage }) {
     const theme = useTheme();
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -65,18 +65,20 @@ export default function PersistentAppDrawer({ children, project, onUpdateImage }
             <CssBaseline />
             <AppBar position='fixed' open={open}>
                 <Toolbar variant='dense'>
-                    <IconButton
-                        color='inherit'
-                        aria-label='open drawer'
-                        onClick={handleDrawerOpen}
-                        edge='start'
-                        sx={{
-                            mr: 2,
-                            ...(open && { display: 'none' })
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    <Tooltip title="Show Project Panel" enterDelay={700}>
+                        <IconButton
+                            color='inherit'
+                            aria-label='open drawer'
+                            onClick={handleDrawerOpen}
+                            edge='start'
+                            sx={{
+                                mr: 2,
+                                ...(open && { display: 'none' })
+                            }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Typography variant='h6' noWrap component='div'>
                         {/* Title */}
                     </Typography>
@@ -98,9 +100,11 @@ export default function PersistentAppDrawer({ children, project, onUpdateImage }
             >
                 <Toolbar variant='dense'>
                     <Typography variant='h6' noWrap component='div' flexGrow={1} flexDirection='row' align="center">Project</Typography>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeft /> : <ChevronRight />}
-                    </IconButton>
+                    <Tooltip title='Hide Project Panel' enterDelay={700}>
+                        <IconButton onClick={handleDrawerClose}>
+                            {theme.direction === 'ltr' ? <ChevronLeft /> : <ChevronRight />}
+                        </IconButton>
+                    </Tooltip>
                 </Toolbar>
                 <Divider />
                 <ProjectPanel project={project} onUpdateImage={onUpdateImage} />
