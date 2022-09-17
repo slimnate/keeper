@@ -3,10 +3,11 @@ const { contextBridge } = require('electron');
 
 const textBasePath = path.join(__dirname, '../')
 
-const testImageCount = 10
+const testImageCount = 15
 const testImages = [...Array(testImageCount).keys()].map((img, i) => {
     return {
         id: i,
+        relativePath: 'logo-512.png',
         path: path.join(__dirname, 'logo-512.png'),
         keep: false,
     }
