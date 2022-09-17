@@ -1,10 +1,20 @@
-import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, TextField, useTheme } from "@mui/material";
+import { FolderOpen } from "@mui/icons-material";
+import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, TextField, InputAdornment, IconButton } from "@mui/material";
 import { Stack } from "@mui/system";
 
 
 export default function ProjectPanel({ project, onUpdateImage }) {
+
+    function handleBrowseForProjectFolder() {
+
+    }
+
+    function handleBrowseForExportFolder() {
+
+    }
+
     const handleToggleKeep = (id) => () => {
-        const image = project.images.filter(image => image.id == id).pop();
+        const image = project.images.filter(image => image.id === id).pop();
 
         onUpdateImage({
             ...image,
@@ -47,9 +57,49 @@ export default function ProjectPanel({ project, onUpdateImage }) {
                 padding: '10px',
             }}>
                 <Stack direction='column' spacing={1}>
-                    <TextField id='project-name' label='Project Name' variant='outlined' value={project.name} size='small'/>
-                    <TextField id='project-base-path' label='Project Path' variant='outlined' value={project.basePath} size='small'/>
-                    <TextField id='project-export-path' label='Export Path' variant='outlined' value={project.basePath} size='small'/>
+                    <TextField
+                        id='project-name'
+                        label='Project Name'
+                        variant='outlined'
+                        value={project.name}
+                        size='small'
+                    />
+                    <TextField
+                        id='project-base-path'
+                        label='Project Path'
+                        variant='outlined'
+                        value={project.basePath}
+                        size='small'
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position='end'>
+                                    <Tooltip title='Browse for folder'>
+                                        <IconButton edge='end' color='default' onClick={handleBrowseForProjectFolder}>
+                                            <FolderOpen />
+                                        </IconButton>
+                                    </Tooltip>
+                                </InputAdornment>
+                            )
+                        }}
+                    />
+                    <TextField
+                        id='project-export-path'
+                        label='Export Path'
+                        variant='outlined'
+                        value={project.basePath}
+                        size='small'
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position='end'>
+                                    <Tooltip title='Browse for folder'>
+                                        <IconButton edge='end' color='default' onClick={handleBrowseForExportFolder}>
+                                            <FolderOpen />
+                                        </IconButton>
+                                    </Tooltip>
+                                </InputAdornment>
+                            )
+                        }}
+                    />
                     <ButtonGroup fullWidth={true}>
                         <Tooltip title='Export the selected images to the export folder'>
                             <Button variant='contained' color="secondary">Export</Button>
