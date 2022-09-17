@@ -1,10 +1,13 @@
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { CssBaseline, Divider, Drawer, IconButton, Paper, Toolbar, Typography } from "@mui/material";
+import { CssBaseline, Divider, Drawer, IconButton, Toolbar, Typography } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled, useTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
+
 import { useState } from "react";
+
+import ProjectPanel from "./ProjectPanel";
 
 const drawerWidth = 240;
 
@@ -100,49 +103,7 @@ export default function PersistentAppDrawer({ children, project }) {
                     </IconButton>
                 </Toolbar>
                 <Divider />
-                <Paper elevation={2} sx={{
-                    flexGrow: 1,
-                    padding: '10px',
-                    margin: '10px',
-                    maxHeight: '100%',
-                    overflow: 'auto',
-                }}>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                    Contents <br/>
-                </Paper>
-                <Divider />
-                <Paper sx={{
-                    padding: '10px',
-                }}>
-                buttons <br/>
-                    buttons <br/>
-                    buttons <br/>
-                    buttons <br/>
-                    buttons <br/>
-                    buttons <br/>
-                </Paper>
+                <ProjectPanel project={project}/>
             </Drawer>
             <Main open={open}>
                 <Toolbar />
