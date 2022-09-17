@@ -5,7 +5,7 @@ import path from "path-browserify";
 import { useState } from "react";
 
 
-export default function ProjectPanel({ project, onUpdateImage, onUpdateProject }) {
+export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject }) {
     const [pathError, setPathError] = useState(null);
 
     function handleBrowseForProjectFolder() {
@@ -46,17 +46,25 @@ export default function ProjectPanel({ project, onUpdateImage, onUpdateProject }
         });
     };
 
+    const handleImageListItemClicked = id => (e) => {
+        if(e.target.id === `switch-${id}`) return;
+
+        console.log(id);
+        onUpdateSelectedImage(id)
+    }
+
     const imageListItems = project.images.map(({ id, path, relativePath, keep }) => {
-        return <ListItem key={id} >
+        return <ListItem key={id} onClick={handleImageListItemClicked(id)}>
             <ListItemAvatar>
                 <Avatar
-                    alt=''
+                    alt='Image Preview'
                     src={`atom://${path}`}
                 />
             </ListItemAvatar>
             <ListItemText>{relativePath}</ListItemText>
             <Switch
                 edge='end'
+                id={`switch-${id}`}
                 onChange={handleToggleKeep(id)}
                 checked={keep}
                 color={keep ? 'success' : 'warning' }

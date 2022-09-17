@@ -14,7 +14,7 @@ const drawerWidth = 300;
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
     ({ theme, open }) => ({
         flexGrow: 1,
-        padding: theme.spacing(3),
+        padding: theme.spacing(2),
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
@@ -48,7 +48,7 @@ const AppBar = styled(MuiAppBar, {
     })
 }));
 
-export default function PersistentAppDrawer({ children, project, onUpdateImage, onUpdateProject }) {
+export default function PersistentAppDrawer({ children, project, onUpdateImage, onUpdateProject, onUpdateSelectedImage }) {
     const theme = useTheme();
     const [open, setOpen] = useState(true);
 
@@ -107,7 +107,7 @@ export default function PersistentAppDrawer({ children, project, onUpdateImage, 
                     </Tooltip>
                 </Toolbar>
                 <Divider />
-                <ProjectPanel project={project} onUpdateImage={onUpdateImage} onUpdateProject={onUpdateProject}/>
+                <ProjectPanel project={project} onUpdateImage={onUpdateImage} onUpdateProject={onUpdateProject} onUpdateSelectedImage={onUpdateSelectedImage}/>
             </Drawer>
             <Main open={open}>
                 <Toolbar />

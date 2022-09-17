@@ -10,26 +10,33 @@ import ImageEditor from './components/ImageEditor';
 
 function App() {
   const [project, setProject] = useState(window.testProject);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   const handleImageUpdate = (newImage) => {
     setProject({
       ...project,
       images: project.images.map((image) => image.id === newImage.id ? newImage : image)
-    })
+    });
   }
 
   const handleUpdateProject = (newProject) => {
-    setProject(newProject)
-  } 
+    setProject(newProject);
+  }
+
+  const handleUpdateSelectedImage = (id) => {
+    console.log(id);
+    setSelectedImage(id);
+  }
 
   return (
     <PersistentAppDrawer
       project={project}
+      selectedImage={selectedImage}
       onUpdateImage={handleImageUpdate}
       onUpdateProject={handleUpdateProject}
+      onUpdateSelectedImage={handleUpdateSelectedImage}
     >
-      <ImageEditor project={ project.images[selectedImage] || null } />
+      <ImageEditor projectExists={project !== null} image={project.images[selectedImage] || null} />
     </PersistentAppDrawer>
   );
 }
