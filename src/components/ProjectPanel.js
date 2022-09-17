@@ -2,9 +2,12 @@ import { FolderOpen } from "@mui/icons-material";
 import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, TextField, InputAdornment, IconButton, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import path from "path-browserify";
+import { useState } from "react";
 
 
 export default function ProjectPanel({ project, onUpdateImage, onUpdateProject }) {
+    const [pathError, setPathError] = useState(null);
+
     function handleBrowseForProjectFolder() {
         window.electronAPI.openFolder().then((path) => {
             console.log(path);
@@ -19,9 +22,18 @@ export default function ProjectPanel({ project, onUpdateImage, onUpdateProject }
     }
 
     function handleExportFolderTextChange(e) {
+        const exportPath = e.target.value
+        let err = null;
+        if(exportPath.length > 1) {
+            if(!/^(?=[a-zA-Z0-9._\s]{1,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/.test(exportPath)){
+                err = 'Invalid characters';
+            }
+        }
+        setPathError(err);
+
         onUpdateProject({
             ...project,
-            exportPath: e.target.value
+            exportPath: exportPath
         })
     }
 
@@ -101,6 +113,8 @@ export default function ProjectPanel({ project, onUpdateImage, onUpdateProject }
                         variant='outlined'
                         value={project.exportPath}
                         size='small'
+                        error={pathError !== null}
+                        helperText={pathError}
                         onChange={handleExportFolderTextChange}
                     />
                     <Tooltip title='Full path to export folder' enterDelay={1000}>
