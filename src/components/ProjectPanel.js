@@ -43,8 +43,16 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
                 >
                     <ListItemAvatar>
                         <Avatar
+                            variant='rounded'
                             alt='Image Preview'
                             src={`atom://${path}`}
+                            sx={{
+                                '& img': {
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
+                                    height: 'auto',
+                                },
+                            }}
                         />
                     </ListItemAvatar>
                     <ListItemText>{relativePath}</ListItemText>
