@@ -16,13 +16,16 @@ const Image = styled('img')(({theme}) => ({
     maxHeight: '100%',
 }));
 
+const MainContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
+}));
+
 export default function ImageEditor({ projectExists, image }) {
     if (projectExists) {
         return (
-            <Box flexGrow={1} sx={{
-                display: 'flex',
-            }}
-            flexDirection='column'>
+            <MainContainer>
                 <ImageHolder container>
                     <Image src={`atom://${image.path}`} alt='Currently selected, full size'></Image>
                 </ImageHolder>
@@ -33,17 +36,19 @@ export default function ImageEditor({ projectExists, image }) {
                         Image buttons<br/>
                         Image buttons<br/>
                 </Paper>
-            </Box>
+            </MainContainer>
         );
     } else {
         return (
-            <Box flexGrow={1} alignContent='center' alignItems='center'>
+            <MainContainer sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
                 <Paper
                     elevation={4}
+                    flexGrow={1}
                     sx={{
                         width: '300px',
-                        alignContent: 'center',
-                        flexGrow: 1
                     }}
                 >
                     <Stack direction='column' alignItems='center' padding='20px'>
@@ -53,7 +58,7 @@ export default function ImageEditor({ projectExists, image }) {
                         <Button variant='contained'>Open existing project</Button>
                     </Stack>
                 </Paper>
-            </Box>
+            </MainContainer>
         );
     }
 }
