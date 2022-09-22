@@ -15,6 +15,18 @@ function writeProjectFile(project) {
     fs.writeFileSync(project.projectFile, JSON.stringify(project));
 }
 
+function isImageFile(name) {
+    return IMAGE_FORMATS.includes(path.extname(name));
+}
+
+function clearImages(folder) {
+    fs.readdirSync(folder, { withFileTypes: true }).forEach(entry => {
+        if(isImageFile(entry.name)) {
+            fs.unlinkSync(path.join(folder, entry.name));
+        }
+    })
+}
+
 
 // PUBLIC functions
 
@@ -71,9 +83,7 @@ function createProject(event, {name, basePath, exportPath}) {
         entries.forEach(entry => {
             if(entry.isFile()){
                 const name = entry.name;
-                const extension = path.extname(name);
-
-                if(IMAGE_FORMATS.includes(extension)) {
+                if(isImageFile(name)) {
                     // add to project
                     addImageToProject(path.join(basePath, name), name);
                 }
@@ -106,6 +116,43 @@ function saveProject(event, project) {
     }
 }
 
+function exportProject(event, project) {
+    try {
+        const exportPath = path.join(project.basePath, project.exportPath);
+        let imageCount = 0;
+
+        // check if export folder exists
+        if(fs.existsSync(exportPath)) {
+            // check if export folder is directory
+            if(fs.statSync(exportPath).isDirectory()) {
+                clearImages(exportPath);
+            } else {
+                // if export path is file we will abort with en error, to avoid messing up existing files
+                throw new Error('exportPath cannot point to an existing file');
+            }
+        } else {
+            // if export folder does not exist, create it
+            fs.mkdirSync(exportPath);
+        }
+        
+        // copy kept images to export folder
+        project.images.forEach(image => {
+            if(image.keep) {
+                const sourcePath = image.path;
+                const destinationPath = path.join(exportPath, image.relativePath);
+
+                fs.writeFileSync(destinationPath, fs.readFileSync(sourcePath));
+                imageCount++;
+            }
+        })
+
+        return { result: { imageCount } }
+    } catch (e) {
+        console.log({e})
+        return {err: e.message}
+    }
+}
+
 const api = {
     fs: {
         openFolder,
@@ -113,6 +160,7 @@ const api = {
         createProject,
         openProject,
         saveProject,
+        exportProject,
     }
 }
 

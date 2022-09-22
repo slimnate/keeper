@@ -71,6 +71,16 @@ function App() {
     })
   }
 
+  const handleExportProject = () => {
+    window.api.fs.exportProject(project).then(({err, result}) => {
+      if(err) {
+        toast.error(`Error exporting project: ${err}`);
+        return;
+      }
+      toast.success(`Exported ${result.imageCount} images to ${project.exportPath}`);
+    })
+  }
+
   const drawerContent = project === null
     ? <NoProjectDialog
         onUpdateProject={handleUpdateProject}
@@ -83,6 +93,7 @@ function App() {
         onUpdateProject={handleUpdateProject}
         onUpdateSelectedImage={handleUpdateSelectedImage}
         onSaveProject={handleSaveProject}
+        onExportProject={handleExportProject}
       />;
   
   const mainContent = project === null

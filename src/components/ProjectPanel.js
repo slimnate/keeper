@@ -3,7 +3,7 @@ import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItem
 import ProjectInfo from "./ProjectInfo";
 
 
-export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject, onSaveProject }) {
+export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject, onSaveProject, onExportProject }) {
     const theme = useTheme();
     const imageCount = project.images.length;
 
@@ -23,6 +23,10 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
 
     const handleSaveProject = e => {
         onSaveProject();
+    }
+
+    const handleExportProject = e => {
+         onExportProject()
     }
 
     const imageListItems = project.images.map(({ id, path, relativePath, keep }) => {
@@ -84,7 +88,7 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
                 <ProjectInfo project={project} onUpdateProject={onUpdateProject}></ProjectInfo>
                 <ButtonGroup fullWidth={true}>
                     <Tooltip title='Export the selected images to the export folder'>
-                        <Button variant='contained' color="secondary">Export</Button>
+                        <Button variant='contained' color="secondary" onClick={handleExportProject}>Export</Button>
                     </Tooltip>
                     <Tooltip title='Save changes to project'>
                         <Button variant='contained' onClick={handleSaveProject}>Save</Button>
