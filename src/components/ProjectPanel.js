@@ -1,10 +1,11 @@
-import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme } from "@mui/material";
+import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme, Typography } from "@mui/material";
 
 import ProjectInfo from "./ProjectInfo";
 
 
 export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject }) {
     const theme = useTheme();
+    const imageCount = project.images.length;
 
     const handleToggleKeep = id => () => {
         const image = project.images.filter(image => image.id === id).pop();
@@ -56,11 +57,22 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
                 margin: '10px',
                 maxHeight: '100%',
                 overflow: 'auto',
+                marginBottom: 0,
             }}>
                 <List dense>
                     {imageListItems}
                 </List>
             </Paper>
+            <Typography
+                variant='subtitle2'
+                fontSize={10}
+                alignSelf='center'
+                sx={{
+                    padding: 0.2
+                }}
+            >
+                {imageCount} images
+            </Typography>
             <Divider />
             <Paper sx={{
                 padding: '10px',
