@@ -45,11 +45,26 @@ export default function ProjectInfo({project, width, pathEditable, onUpdateProje
         });
     }
 
+    function handlePathTextChange(e) {
+        if(pathEditable) {
+            const path = e.target.value;
+
+            onUpdateProject({
+                ...project,
+                basePath: path
+            });
+        }
+    }
+
     const exportFullPath = path.join(project?.basePath, project?.exportPath);
 
 
     return (
-        <Stack direction='column' spacing={1}>
+        <Stack direction='column' spacing={1} sx={{
+            ...(width && {
+                width: width,
+            })
+        }}>
             <TextField
                 id='project-name'
                 label='Project Name'
@@ -64,6 +79,7 @@ export default function ProjectInfo({project, width, pathEditable, onUpdateProje
                 variant='outlined'
                 value={project?.basePath}
                 size='small'
+                onChange={handlePathTextChange}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position='end'>

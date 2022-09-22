@@ -35,9 +35,24 @@ function App() {
     setSelectedImage(id);
   }
 
+  const handleCreateProject = (newProject) => {
+    console.log({ msg: 'creating project', newProject });
+    window.api.fs.createProject(newProject).then(({err, project}) => {
+      console.log(project);
+      if(err) {
+        console.log(err);
+        toast(`Error creating project: ${err}`);
+        return;
+      }
+      console.log({ msg: 'created project', project });
+      setProject(project);
+    })
+  }
+
   const drawerContent = project === null
     ? <NoProjectDialog
         onUpdateProject={handleUpdateProject}
+        onCreateProject={handleCreateProject}
       />
     : <ProjectPanel
         project={project}
@@ -49,6 +64,7 @@ function App() {
   const mainContent = project === null
     ? <NoProjectDialog 
         onUpdateProject={handleUpdateProject}
+        onCreateProject={handleCreateProject}
       />
     : <ImageEditor
         image={project.images[selectedImage]}

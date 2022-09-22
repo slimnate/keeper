@@ -4,20 +4,31 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typog
 import { useState } from "react";
 import ProjectInfo from "./ProjectInfo";
 
-export default function NoProjectDialog({width = 300}) {
+const projectScaffold = {
+    name: '',
+    basePath: '',
+    exportPath: 'keepers',
+}
+
+export default function NoProjectDialog({width = 300, onCreateProject}) {
     const [open, setOpen] = useState(false);
-    const [project, setProject] = useState({
-        name: '',
-        basePath: '',
-        exportPath: '',
-    });
+    const [project, setProject] = useState(projectScaffold);
 
     const handleCreateButtonClick = (e) => {
         setOpen(true);
     }
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleAction = action => (e) => {
+        if (action === 'close') {
+            setOpen(false);
+        } else if (action === 'cancel') {
+            //reset project skeleton if cancelled
+            setProject(projectScaffold);
+            setOpen(false);
+        } else if (action === 'create') {
+            onCreateProject(project);
+            setOpen(false);
+        }
     }
 
     const handleUpdateProject = (newProject) => {
@@ -49,17 +60,17 @@ export default function NoProjectDialog({width = 300}) {
         </Box>
         <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={handleAction('close')}
         >
             <DialogTitle>
                 Create new project
             </DialogTitle>
             <DialogContent>
-                <ProjectInfo project={project} onUpdateProject={handleUpdateProject} />
+                <ProjectInfo project={project} onUpdateProject={handleUpdateProject} pathEditable={true} width='400px'/>
             </DialogContent>
             <DialogActions>
-                <Button variant='contained' onClick={handleClose}>Cancel</Button>
-                <Button variant='contained' onClick={handleClose}>Create Project</Button>
+                <Button variant='contained' onClick={handleAction('cancel')}>Cancel</Button>
+                <Button variant='contained' onClick={handleAction('create')}>Create Project</Button>
             </DialogActions>
         </Dialog>
         </>
