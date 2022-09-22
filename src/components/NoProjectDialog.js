@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typog
 
 import { useState } from "react";
 import ProjectInfo from "./ProjectInfo";
+import { toast } from "react-toastify";
 
 const projectScaffold = {
     name: '',
@@ -10,7 +11,7 @@ const projectScaffold = {
     exportPath: 'keepers',
 }
 
-export default function NoProjectDialog({width = 300, onCreateProject}) {
+export default function NoProjectDialog({width = 300, onCreateProject, onUpdateProject}) {
     const [open, setOpen] = useState(false);
     const [project, setProject] = useState(projectScaffold);
 
@@ -35,6 +36,24 @@ export default function NoProjectDialog({width = 300, onCreateProject}) {
         setProject(newProject);
     }
 
+    const handleOpenButtonClick = () => {
+        window.api.fs.openFile().then(files => {
+            if(files === undefined) return;
+            const file = files[0];
+
+            console.log(file);
+
+            window.api.fs.openProject(file).then(({err, project}) => {
+                console.log(project);
+                if(err) {
+                    toast(`Error opening project: ${err}`);
+                    return;
+                }
+                onUpdateProject(project);
+            });
+        });
+    }
+
     return (
         <>
         <Box sx={{
@@ -54,7 +73,7 @@ export default function NoProjectDialog({width = 300, onCreateProject}) {
                     <Typography variant='h6'>Get started</Typography>
                     <Button variant='contained' onClick={handleCreateButtonClick}>Create new project</Button>
                     <Typography variant='subtitle2'>OR</Typography>
-                    <Button variant='contained'>Open existing project</Button>
+                    <Button variant='contained' onClick={handleOpenButtonClick}>Open existing project</Button>
                 </Stack>
             </Paper>
         </Box>

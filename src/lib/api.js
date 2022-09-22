@@ -21,8 +21,16 @@ function writeProjectFile(project) {
 function openFolder(){
     const filePaths = dialog.showOpenDialogSync({
         properties: ['openDirectory']
-    })
-    return filePaths
+    });
+    return filePaths;
+}
+
+function openFile() {
+    const filePaths = dialog.showOpenDialogSync({
+        filters: [{ name: 'Keeper Project Files', extensions:['kprj']}],
+        properties: ['openFile']
+    });
+    return filePaths;
 }
 
 function createProject(event, { name, basePath, exportPath}) {
@@ -81,12 +89,12 @@ function createProject(event, { name, basePath, exportPath}) {
     return { project };
 }
 
-function openProject(filePath) {
+function openProject(event, filePath) {
     let project;
     try {
         project = readProjectFile(filePath);
     } catch (e) {
-        return { err: e };
+        return { err: e.message };
     }
     return { project }
 }
@@ -94,6 +102,7 @@ function openProject(filePath) {
 const api = {
     fs: {
         openFolder,
+        openFile,
         createProject,
         openProject,
     }
