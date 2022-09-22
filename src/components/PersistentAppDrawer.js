@@ -13,8 +13,6 @@ const drawerWidth = 300;
 
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
     ({ theme, open }) => ({
-        flexGrow: 1,
-        padding: theme.spacing(2),
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
@@ -27,6 +25,10 @@ const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
             }),
             marginLeft: 0,
         }),
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        padding: 0,
     })
 );
 
@@ -44,7 +46,6 @@ const AppBar = styled(MuiAppBar, {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        
     })
 }));
 
@@ -61,7 +62,10 @@ export default function PersistentAppDrawer({ children, project, onUpdateImage, 
     }
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{
+            display: 'flex',
+            height: '100%'
+        }}>
             <CssBaseline />
             <AppBar position='fixed' open={open}>
                 <Toolbar variant='dense'>
@@ -109,8 +113,8 @@ export default function PersistentAppDrawer({ children, project, onUpdateImage, 
                 <Divider />
                 <ProjectPanel project={project} onUpdateImage={onUpdateImage} onUpdateProject={onUpdateProject} onUpdateSelectedImage={onUpdateSelectedImage}/>
             </Drawer>
-            <Main open={open}>
-                <Toolbar />
+            <Main open={open} flexDirection='column' sx={{height: '100%'}}>
+                <Box flexGrow={0}><Box sx={{ width: '100%', height: '64px'}} /></Box>
                 {children}
             </Main>
         </Box>
