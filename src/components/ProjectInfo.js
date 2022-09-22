@@ -6,11 +6,11 @@ import path from "path-browserify";
 
 import { useState } from "react";
 
-export default function ProjectInfo({project, onUpdateProject}) {
+export default function ProjectInfo({project, width, pathEditable, onUpdateProject}) {
     const [pathError, setPathError] = useState(null);
 
     function handleBrowseForProjectFolder() {
-        window.electronAPI.openFolder().then((path) => {
+        window.api.fs.openFolder().then((path) => {
             if(path === undefined) return;
 
             onUpdateProject({

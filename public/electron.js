@@ -1,15 +1,8 @@
 const path = require('path');
 
-const { app, BrowserWindow, protocol, dialog, ipcMain } = require('electron');
+const { app, BrowserWindow, protocol, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
-
-
-function handleFolderOpen() {
-    const filePaths = dialog.showOpenDialogSync({
-        properties: ['openDirectory']
-    })
-    return filePaths;
-}
+const api = require('../src/lib/api');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -39,8 +32,13 @@ app.whenReady().then(() => {
         cb({ path: url.substring(7) });
     });
 
-    //register ipc event handlers
-    ipcMain.handle('dialog:openFolder', handleFolderOpen);
+    //register ipc event handlers for all methods from api.js
+    Object.keys(api).forEach((prefix) => {
+        Object.keys(api[prefix]).forEach((funcName) => {
+            console.log(`registering handler for ${prefix}:${funcName}`)
+            ipcMain.handle(`${prefix}:${funcName}`, api[prefix][funcName]);
+        })
+    });
 
     //create window
     createWindow();

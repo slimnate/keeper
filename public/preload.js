@@ -1,5 +1,6 @@
 const path = require('path');
 const { contextBridge, ipcRenderer } = require('electron');
+const api = require('../src/lib/api');
 
 const textBasePath = path.join(__dirname, '../')
 
@@ -7,7 +8,7 @@ const testImageCount = 15
 const testImages = [...Array(testImageCount).keys()].map((img, i) => {
     const mod = i % 6;
     let relPath = `test${mod}.png`;
-    
+
     return {
         id: i,
         relativePath: relPath,
@@ -24,6 +25,15 @@ const testProject = {
 };
 
 contextBridge.exposeInMainWorld('testProject', testProject);
-contextBridge.exposeInMainWorld('electronAPI', {
-    openFolder: () => ipcRenderer.invoke('dialog:openFolder'),
+
+// Automatically register all API invokers and expose to main world
+const apiInvoker = {};
+Object.keys(api).forEach((prefix) => {
+    let subModule = {};
+    Object.keys(api[prefix]).forEach(funcName => {
+        console.log(`registering invoker for ${prefix}:${funcName}`)
+        subModule[funcName] = (props) => ipcRenderer.invoke(`${prefix}:${funcName}`, props);
+    })
+    apiInvoker[prefix] = subModule;
 })
+contextBridge.exposeInMainWorld('api', apiInvoker);
