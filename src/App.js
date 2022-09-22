@@ -56,6 +56,7 @@ function App() {
       />
     : <ProjectPanel
         project={project}
+        selectedImage={selectedImage}
         onUpdateImage={handleUpdateImage}
         onUpdateProject={handleUpdateProject}
         onUpdateSelectedImage={handleUpdateSelectedImage}

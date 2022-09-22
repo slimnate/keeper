@@ -1,9 +1,10 @@
-import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch } from "@mui/material";
+import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme } from "@mui/material";
 
 import ProjectInfo from "./ProjectInfo";
 
 
 export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject }) {
+    const theme = useTheme();
 
     const handleToggleKeep = (id) => () => {
         const image = project.images.filter(image => image.id === id).pop();
@@ -16,28 +17,36 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
 
     const handleImageListItemClicked = id => (e) => {
         if(e.target.id === `switch-${id}`) return;
-
-        console.log(id);
         onUpdateSelectedImage(id)
     }
 
     const imageListItems = project.images.map(({ id, path, relativePath, keep }) => {
-        return <ListItem key={id} onClick={handleImageListItemClicked(id)}>
-            <ListItemAvatar>
-                <Avatar
-                    alt='Image Preview'
-                    src={`atom://${path}`}
-                />
-            </ListItemAvatar>
-            <ListItemText>{relativePath}</ListItemText>
-            <Switch
-                edge='end'
-                id={`switch-${id}`}
-                onChange={handleToggleKeep(id)}
-                checked={keep}
-                color={keep ? 'success' : 'warning' }
-            />
-        </ListItem>
+        const selected = id === selectedImage;
+
+        return <ListItem
+                    key={id}
+                    onClick={handleImageListItemClicked(id)}
+                    sx={{
+                        ...(selected && {
+                            backgroundColor: theme.palette.grey[300],
+                        })
+                    }}
+                >
+                    <ListItemAvatar>
+                        <Avatar
+                            alt='Image Preview'
+                            src={`atom://${path}`}
+                        />
+                    </ListItemAvatar>
+                    <ListItemText>{relativePath}</ListItemText>
+                    <Switch
+                        edge='end'
+                        id={`switch-${id}`}
+                        onChange={handleToggleKeep(id)}
+                        checked={keep}
+                        color={keep ? 'success' : 'warning' }
+                    />
+                </ListItem>
     });
     
     return (
