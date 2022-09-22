@@ -34,17 +34,23 @@ function App() {
   }
 
   const drawerContent = project === null
-    ? <NoProjectDialog />
+    ? <NoProjectDialog
+        onUpdateProject={handleUpdateProject}
+      />
     : <ProjectPanel
-      project={project}
-      onUpdateImage={handleUpdateImage}
-      onUpdateProject={handleUpdateProject}
-      onUpdateSelectedImage={handleUpdateSelectedImage}
-    />;
+        project={project}
+        onUpdateImage={handleUpdateImage}
+        onUpdateProject={handleUpdateProject}
+        onUpdateSelectedImage={handleUpdateSelectedImage}
+      />;
+  
   const mainContent = project === null
-    ? <NoProjectDialog />
+    ? <NoProjectDialog 
+        onUpdateProject={handleUpdateProject}
+      />
     : <ImageEditor
-      image={project.images[selectedImage]} />
+        image={project.images[selectedImage]}
+      />
 
   return (
     <Layout
