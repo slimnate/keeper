@@ -44,12 +44,12 @@ function createProject(event, { name, basePath, exportPath}) {
     };
 
     // Add a new image to the project, updating the nextId property
-    function addImageToProject(path, relPath) {
+    function addImageToProject(path, relativePath) {
         const image = {
             id: project.nextId,
             keep: false,
             path,
-            relPath
+            relativePath
         };
 
         project.images = [
