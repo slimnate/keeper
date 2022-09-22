@@ -4,9 +4,11 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+
+import { useState } from 'react';
+
 import Layout from './components/Layout';
 import NoProjectDialog from './components/NoProjectDialog'
-import { useState } from 'react';
 import ImageEditor from './components/ImageEditor';
 import ProjectPanel from './components/ProjectPanel';
 
@@ -31,8 +33,18 @@ function App() {
     setSelectedImage(id);
   }
 
-  const drawerContent = project === null ? <NoProjectDialog /> : <ProjectPanel project={project} onUpdateImage={handleUpdateImage} onUpdateProject={handleUpdateProject} onUpdateSelectedImage={handleUpdateSelectedImage}/>;
-  const mainContent = project === null ? <NoProjectDialog /> : <ImageEditor image={project !== null ? project.images[selectedImage] : null} />
+  const drawerContent = project === null
+    ? <NoProjectDialog />
+    : <ProjectPanel
+      project={project}
+      onUpdateImage={handleUpdateImage}
+      onUpdateProject={handleUpdateProject}
+      onUpdateSelectedImage={handleUpdateSelectedImage}
+    />;
+  const mainContent = project === null
+    ? <NoProjectDialog />
+    : <ImageEditor
+      image={project.images[selectedImage]} />
 
   return (
     <Layout
