@@ -45,6 +45,18 @@ function App() {
     }
   }
 
+  const handleSaveProject = () => {
+    // save project to disk
+    window.api.fs.saveProject(project).then(result => {
+      if(result.err) {
+        toast.error(`Error saving project: ${result.err}`);
+        return;
+      }
+      toast.success('Project saved!');
+      setProject(result.project);
+    });
+  }
+
   const handleCreateProject = (newProject) => {
     console.log({ msg: 'creating project', newProject });
     window.api.fs.createProject(newProject).then(({err, project}) => {
@@ -70,6 +82,7 @@ function App() {
         onUpdateImage={handleUpdateImage}
         onUpdateProject={handleUpdateProject}
         onUpdateSelectedImage={handleUpdateSelectedImage}
+        onSaveProject={handleSaveProject}
       />;
   
   const mainContent = project === null

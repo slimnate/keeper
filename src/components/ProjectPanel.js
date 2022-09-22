@@ -3,7 +3,7 @@ import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItem
 import ProjectInfo from "./ProjectInfo";
 
 
-export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject }) {
+export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject, onSaveProject }) {
     const theme = useTheme();
     const imageCount = project.images.length;
 
@@ -19,6 +19,10 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
     const handleImageListItemClicked = id => (e) => {
         if(e.target.id === `switch-${id}`) return;
         onUpdateSelectedImage(id);
+    }
+
+    const handleSaveProject = e => {
+        onSaveProject();
     }
 
     const imageListItems = project.images.map(({ id, path, relativePath, keep }) => {
@@ -83,7 +87,7 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
                         <Button variant='contained' color="secondary">Export</Button>
                     </Tooltip>
                     <Tooltip title='Save changes to project'>
-                        <Button variant='contained'>Save</Button>
+                        <Button variant='contained' onClick={handleSaveProject}>Save</Button>
                     </Tooltip>
                 </ButtonGroup>
             </Paper>

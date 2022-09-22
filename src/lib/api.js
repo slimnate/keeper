@@ -12,7 +12,7 @@ function readProjectFile(path) {
 
 function writeProjectFile(project) {
     console.log({msg: 'writing', project});
-    return fs.writeFileSync(project.projectFile, JSON.stringify(project))
+    fs.writeFileSync(project.projectFile, JSON.stringify(project));
 }
 
 
@@ -33,7 +33,7 @@ function openFile() {
     return filePaths;
 }
 
-function createProject(event, { name, basePath, exportPath}) {
+function createProject(event, {name, basePath, exportPath}) {
     let project = {
         name,
         basePath,
@@ -90,13 +90,20 @@ function createProject(event, { name, basePath, exportPath}) {
 }
 
 function openProject(event, filePath) {
-    let project;
     try {
-        project = readProjectFile(filePath);
+        return { project: readProjectFile(filePath) }
     } catch (e) {
         return { err: e.message };
     }
-    return { project }
+}
+
+function saveProject(event, project) {
+    try {
+        writeProjectFile(project);
+        return { project: readProjectFile(project.projectFile) }
+    } catch (e) {
+        return {err: e.message};
+    }
 }
 
 const api = {
@@ -105,6 +112,7 @@ const api = {
         openFile,
         createProject,
         openProject,
+        saveProject,
     }
 }
 
