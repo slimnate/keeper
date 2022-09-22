@@ -10,13 +10,11 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
 
     function handleBrowseForProjectFolder() {
         window.electronAPI.openFolder().then((path) => {
-            console.log(path);
-
             if(path === undefined) return;
 
             onUpdateProject({
                 ...project,
-                basePath: path
+                basePath: path[0]
             })
         });
     }
@@ -53,7 +51,7 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
         onUpdateSelectedImage(id)
     }
 
-    const imageListItems = project.images.map(({ id, path, relativePath, keep }) => {
+    const imageListItems = project === null ? null : project.images.map(({ id, path, relativePath, keep }) => {
         return <ListItem key={id} onClick={handleImageListItemClicked(id)}>
             <ListItemAvatar>
                 <Avatar
@@ -71,7 +69,7 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
             />
         </ListItem>
     });
-    const exportFullPath = path.join(project.basePath, project.exportPath);
+    const exportFullPath = project === null ? null : path.join(project.basePath, project.exportPath);
     
     return (
         <>

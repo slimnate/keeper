@@ -7,8 +7,6 @@ import { Box } from "@mui/system";
 
 import { useState } from "react";
 
-import ProjectPanel from "./ProjectPanel";
-
 const drawerWidth = 300;
 
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
@@ -49,7 +47,7 @@ const AppBar = styled(MuiAppBar, {
     })
 }));
 
-export default function PersistentAppDrawer({ children, project, onUpdateImage, onUpdateProject, onUpdateSelectedImage }) {
+export default function Layout({ drawer, main }) {
     const theme = useTheme();
     const [open, setOpen] = useState(true);
 
@@ -111,11 +109,11 @@ export default function PersistentAppDrawer({ children, project, onUpdateImage, 
                     </Tooltip>
                 </Toolbar>
                 <Divider />
-                <ProjectPanel project={project} onUpdateImage={onUpdateImage} onUpdateProject={onUpdateProject} onUpdateSelectedImage={onUpdateSelectedImage}/>
+                {drawer}
             </Drawer>
             <Main open={open} flexDirection='column' sx={{height: '100%'}}>
                 <Box flexGrow={0}><Box sx={{ width: '100%', height: '64px'}} /></Box>
-                {children}
+                {main}
             </Main>
         </Box>
     );

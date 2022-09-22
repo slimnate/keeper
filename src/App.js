@@ -4,15 +4,18 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import PersistentAppDrawer from './components/PersistentAppDrawer';
+import Layout from './components/Layout';
+import NoProjectDialog from './components/NoProjectDialog'
 import { useState } from 'react';
 import ImageEditor from './components/ImageEditor';
+import ProjectPanel from './components/ProjectPanel';
 
 function App() {
-  const [project, setProject] = useState(window.testProject);
+  // const [project, setProject] = useState(window.testProject);
+  const [project, setProject] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const handleImageUpdate = (newImage) => {
+  const handleUpdateImage = (newImage) => {
     setProject({
       ...project,
       images: project.images.map((image) => image.id === newImage.id ? newImage : image)
@@ -28,16 +31,15 @@ function App() {
     setSelectedImage(id);
   }
 
+  const drawerContent = project === null ? <NoProjectDialog /> : <ProjectPanel project={project} onUpdateImage={handleUpdateImage} onUpdateProject={handleUpdateProject} onUpdateSelectedImage={handleUpdateSelectedImage}/>;
+  const mainContent = project === null ? <NoProjectDialog /> : <ImageEditor image={project !== null ? project.images[selectedImage] : null} />
+
   return (
-    <PersistentAppDrawer
-      project={project}
-      selectedImage={selectedImage}
-      onUpdateImage={handleImageUpdate}
-      onUpdateProject={handleUpdateProject}
-      onUpdateSelectedImage={handleUpdateSelectedImage}
+    <Layout
+      drawer={drawerContent}
+      main={mainContent}
     >
-      <ImageEditor projectExists={project !== null} image={project.images[selectedImage] || null} />
-    </PersistentAppDrawer>
+    </Layout>
   );
 }
 
