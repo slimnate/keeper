@@ -35,6 +35,16 @@ function App() {
     setSelectedImage(id);
   }
 
+  const handleRotateSelectedImage = () => {
+    const imageCount = project.images.length;
+    console.log({selectedImage, imageCount});
+    if(selectedImage === imageCount - 1) {
+      setSelectedImage(0);
+    } else {
+      setSelectedImage(selectedImage+1);
+    }
+  }
+
   const handleCreateProject = (newProject) => {
     console.log({ msg: 'creating project', newProject });
     window.api.fs.createProject(newProject).then(({err, project}) => {
@@ -69,6 +79,8 @@ function App() {
       />
     : <ImageEditor
         image={project.images[selectedImage]}
+        onUpdateImage={handleUpdateImage}
+        onRotateSelectedImage={handleRotateSelectedImage}
       />
 
   return (

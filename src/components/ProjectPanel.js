@@ -6,7 +6,7 @@ import ProjectInfo from "./ProjectInfo";
 export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject }) {
     const theme = useTheme();
 
-    const handleToggleKeep = (id) => () => {
+    const handleToggleKeep = id => () => {
         const image = project.images.filter(image => image.id === id).pop();
 
         onUpdateImage({
@@ -17,7 +17,7 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
 
     const handleImageListItemClicked = id => (e) => {
         if(e.target.id === `switch-${id}`) return;
-        onUpdateSelectedImage(id)
+        onUpdateSelectedImage(id);
     }
 
     const imageListItems = project.images.map(({ id, path, relativePath, keep }) => {

@@ -28,7 +28,24 @@ const KeepButton = styled(Button)(() => ({
     flexGrow: '1',
 }));
 
-export default function ImageEditor({ image }) {
+export default function ImageEditor({ image , onUpdateImage, onRotateSelectedImage }) {
+    const handleAction = action => () => {
+        if(action === 'keep') {
+            // update image to keep
+            onUpdateImage({
+                ...image,
+                keep: true,
+            });
+        } else if (action === 'discard') {
+            // update image to discard
+            onUpdateImage({
+                ...image,
+                keep: false,
+            });
+        }
+        onRotateSelectedImage();
+    }
+
     return (
         <MainContainer>
             <ImageHolder>
@@ -43,10 +60,10 @@ export default function ImageEditor({ image }) {
                 alignItems: 'flex-end',
             }}>
                 <ButtonGroup>
-                    <KeepButton variant='contained' color='error'>
+                    <KeepButton variant='contained' color='error' onClick={handleAction('discard')}>
                         <Clear></Clear>
                     </KeepButton>
-                    <KeepButton variant='contained' color='success'>
+                    <KeepButton variant='contained' color='success' onClick={handleAction('keep')}>
                         <Check></Check>
                     </KeepButton>
                 </ButtonGroup>
