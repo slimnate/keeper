@@ -2,7 +2,7 @@ const path = require('path');
 const { contextBridge, ipcRenderer } = require('electron');
 const api = require('../src/lib/api');
 
-const textBasePath = path.join(__dirname, '../')
+const testBasePath = path.join(__dirname, '../test')
 
 const testImageCount = 15
 const testImages = [...Array(testImageCount).keys()].map((img, i) => {
@@ -12,15 +12,15 @@ const testImages = [...Array(testImageCount).keys()].map((img, i) => {
     return {
         id: i,
         relativePath: relPath,
-        path: path.join(__dirname, relPath),
+        path: path.join(testBasePath, relPath),
         keep: false,
     }
 })
 const testProject = {
     name: 'Test Project',
-    basePath: textBasePath,
+    basePath: testBasePath,
     exportPath: 'keepers',
-    projectFile: path.join(textBasePath, 'Test Project.keep'),
+    projectFile: path.join(testBasePath, 'Test Project.kprj'),
     images: testImages,
 };
 
