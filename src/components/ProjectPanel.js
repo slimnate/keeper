@@ -1,4 +1,5 @@
 import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme, Typography } from "@mui/material";
+import { getImagePath } from "../lib/helpers";
 
 import ProjectInfo from "./ProjectInfo";
 
@@ -29,7 +30,8 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
          onExportProject()
     }
 
-    const imageListItems = project.images.map(({ id, path, relativePath, keep }) => {
+    const imageListItems = project.images.map(image => {
+        const { id, relativePath, keep } = image;
         const selected = id === selectedImage;
 
         return <ListItem
@@ -45,7 +47,7 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
                         <Avatar
                             variant='rounded'
                             alt='Image Preview'
-                            src={`atom://${path}`}
+                            src={getImagePath(image)}
                             sx={{
                                 '& img': {
                                     maxWidth: '100%',

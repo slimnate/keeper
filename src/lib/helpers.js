@@ -1,7 +1,6 @@
 // Slugify a string
 // credit: https://lucidar.me/en/web-dev/how-to-slugify-a-string-in-javascript/
-function slugify(str)
-{
+function slugify(str) {
     str = str.replace(/^\s+|\s+$/g, '');
 
     // Make the string lowercase
@@ -24,8 +23,13 @@ function slugify(str)
     return str;
 }
 
+function getImagePath(image) {
+    return `atom://${image.previewPath ? image.previewPath : image.path}`
+}
+
 const helpers = {
-    slugify
+    slugify,
+    getImagePath,
 }
 
 module.exports = helpers;

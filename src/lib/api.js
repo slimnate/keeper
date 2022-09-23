@@ -2,8 +2,14 @@ const { dialog } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./helpers');
+const extractd = require('extractd');
 
-const IMAGE_FORMATS = ['.png', '.gif', '.jpg', '.jpeg', '.CR2', '.CR3'];
+const STANDARD_FORMATS = ['.png', '.gif', '.jpg', '.jpeg', ];
+const RAW_FORMATS = ['.cr2', '.cr3', ];
+const IMAGE_FORMATS = [
+    ...STANDARD_FORMATS,
+    ...RAW_FORMATS,
+]
 
 //PRIVATE functions
 function readProjectFile(path) {
@@ -16,7 +22,7 @@ function writeProjectFile(project) {
 }
 
 function isImageFile(name) {
-    return IMAGE_FORMATS.includes(path.extname(name));
+    return IMAGE_FORMATS.includes(path.extname(name).toLowerCase());
 }
 
 function clearImages(folder) {
@@ -25,6 +31,22 @@ function clearImages(folder) {
             fs.unlinkSync(path.join(folder, entry.name));
         }
     })
+}
+
+function isRawFormat(name) {
+    return RAW_FORMATS.includes(path.extname(name).toLowerCase());
+}
+
+async function performConversions(image) {
+    if(isRawFormat(image.relativePath)) {
+        const previewPath = await extractd.generate(image.path, { datauri: true, compact: true, persist: true });
+        return {
+            ...image,
+            previewPath
+        }
+    } else {
+        return image;
+    }
 }
 
 
@@ -45,7 +67,7 @@ function openFile() {
     return filePaths;
 }
 
-function createProject(event, {name, basePath, exportPath}) {
+async function createProject(event, {name, basePath, exportPath}) {
     let project = {
         name,
         basePath,
@@ -56,21 +78,24 @@ function createProject(event, {name, basePath, exportPath}) {
     };
 
     // Add a new image to the project, updating the nextId property
-    function addImageToProject(path, relativePath) {
-        const image = {
+    async function addImageToProject(path, relativePath) {
+        let image = {
             id: project.nextId,
             keep: false,
+            previewPath: null,
             path,
             relativePath
         };
 
+        image = await performConversions(image);
         project.images = [
             ...project.images,
             image,
         ];
         project.nextId += 1;
+        console.log(image);
+        return image;
     }
-
 
     try {
         // if project file already exists, open it instead
@@ -80,15 +105,15 @@ function createProject(event, {name, basePath, exportPath}) {
 
         // loop through files in folder to find images
         const entries = fs.readdirSync(basePath, {withFileTypes: true})
-        entries.forEach(entry => {
+        for(const entry of entries) {
             if(entry.isFile()){
                 const name = entry.name;
                 if(isImageFile(name)) {
                     // add to project
-                    addImageToProject(path.join(basePath, name), name);
+                    await addImageToProject(path.join(basePath, name), name);
                 }
             }
-        });
+        };
 
         writeProjectFile(project);
 
