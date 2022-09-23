@@ -1,6 +1,7 @@
 const path = require('path');
 const { contextBridge, ipcRenderer } = require('electron');
 const api = require('../src/lib/api');
+const { getIpcInvoker } = require('../src/lib/helpers');
 
 const testBasePath = path.join(__dirname, '../test')
 
@@ -27,13 +28,11 @@ const testProject = {
 contextBridge.exposeInMainWorld('testProject', testProject);
 
 // Automatically register all API invokers and expose to main world
-const apiInvoker = {};
-Object.keys(api).forEach((prefix) => {
-    let subModule = {};
-    Object.keys(api[prefix]).forEach(funcName => {
-        console.log(`registering invoker for ${prefix}:${funcName}`)
-        subModule[funcName] = (props) => ipcRenderer.invoke(`${prefix}:${funcName}`, props);
-    })
-    apiInvoker[prefix] = subModule;
-})
+const apiInvoker = getIpcInvoker(ipcRenderer, api);
+console.log({apiInvoker});
+
 contextBridge.exposeInMainWorld('api', apiInvoker);
+
+contextBridge.exposeInMainWorld('progress', {
+    onUpdateProgress: callback => ipcRenderer.on('progress', callback)
+})

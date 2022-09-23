@@ -1,8 +1,9 @@
 const path = require('path');
-
 const { app, BrowserWindow, protocol, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
 const api = require('../src/lib/api');
+const { registerIpcHandlers } = require('../src/lib/helpers');
+
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -23,6 +24,8 @@ function createWindow() {
     if(isDev) {
         win.webContents.openDevTools({ mode: 'detach' });
     }
+
+    api.setWindow(win);
 }
 
 app.whenReady().then(() => {
@@ -32,13 +35,7 @@ app.whenReady().then(() => {
         cb({ path: url.substring(7) });
     });
 
-    //register ipc event handlers for all methods from api.js
-    Object.keys(api).forEach((prefix) => {
-        Object.keys(api[prefix]).forEach((funcName) => {
-            console.log(`registering handler for ${prefix}:${funcName}`)
-            ipcMain.handle(`${prefix}:${funcName}`, api[prefix][funcName]);
-        })
-    });
+    registerIpcHandlers(ipcMain, api);
 
     //create window
     createWindow();

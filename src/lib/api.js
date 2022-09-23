@@ -11,6 +11,12 @@ const IMAGE_FORMATS = [
     ...RAW_FORMATS,
 ]
 
+let window = null;
+
+function setWindow(win) {
+    window = win;
+}
+
 //PRIVATE functions
 function readProjectFile(path) {
     return JSON.parse(fs.readFileSync(path));
@@ -104,8 +110,12 @@ async function createProject(event, {name, basePath, exportPath}) {
         }
 
         // loop through files in folder to find images
-        const entries = fs.readdirSync(basePath, {withFileTypes: true})
+        const entries = fs.readdirSync(basePath, {withFileTypes: true});
+        const entryCount = entries.length;
+        let currentEntry = 0;
         for(const entry of entries) {
+            currentEntry++;
+            window.webContents.send('progress', { total: entryCount, current: currentEntry });
             if(entry.isFile()){
                 const name = entry.name;
                 if(isImageFile(name)) {
@@ -179,6 +189,7 @@ function exportProject(event, project) {
 }
 
 const api = {
+    setWindow,
     fs: {
         openFolder,
         openFile,
