@@ -1,30 +1,10 @@
 import { Box, Stack } from "@mui/system";
 import { Button, Paper, Typography } from "@mui/material";
 
-import { toast } from "react-toastify";
-
 export default function NoProjectPrompt({width = 300, setShowCreateDialog, onOpenProject }) {
 
     const handleCreateButtonClick = (e) => {
         setShowCreateDialog(true);
-    }
-
-    const handleOpenButtonClick = () => {
-        window.api.fs.openFile().then(files => {
-            if(files === undefined) return;
-            const file = files[0];
-
-            console.log(file);
-
-            window.api.fs.openProject(file).then(({err, project}) => {
-                console.log(project);
-                if(err) {
-                    toast(`Error opening project: ${err}`);
-                    return;
-                }
-                onOpenProject(project);
-            });
-        });
     }
 
     return (
@@ -45,7 +25,7 @@ export default function NoProjectPrompt({width = 300, setShowCreateDialog, onOpe
                     <Typography variant='h6'>Get started</Typography>
                     <Button variant='contained' onClick={handleCreateButtonClick}>Create new project</Button>
                     <Typography variant='subtitle2'>OR</Typography>
-                    <Button variant='contained' onClick={handleOpenButtonClick}>Open existing project</Button>
+                    <Button variant='contained' onClick={onOpenProject}>Open existing project</Button>
                 </Stack>
             </Paper>
         </Box>

@@ -14,6 +14,7 @@ import NoProjectPrompt from './components/NoProjectPrompt'
 import ImageEditor from './components/ImageEditor';
 import ProjectPanel from './components/ProjectPanel';
 import CreateProjectDialog from './components/CreateProjectDialog';
+import { Button } from '@mui/material';
 
 function App() {
   // const [project, setProject] = useState(window.testProject);
@@ -59,6 +60,28 @@ function App() {
     });
   }
 
+  const handleOpenProject = () => {
+      window.api.fs.openFile().then(files => {
+          if(files === undefined) return;
+          const file = files[0];
+
+          console.log(file);
+
+          window.api.fs.openProject(file).then(({err, project}) => {
+              console.log(project);
+              if(err) {
+                  toast(`Error opening project: ${err}`);
+                  return;
+              }
+              setProject(project);
+          });
+      });
+  }
+
+  const handleClearProject = () => {
+    setProject(null);
+  }
+
   const handleCreateProject = (newProject) => {
     console.log({ msg: 'creating project', newProject });
     window.api.fs.createProject(newProject).then(({err, project}) => {
@@ -85,7 +108,7 @@ function App() {
 
   const drawerContent = project === null
     ? <NoProjectPrompt
-        onOpenProject={handleUpdateProject}
+        onOpenProject={handleOpenProject}
         setShowCreateDialog={setShowCreateDialog}
       />
     : <ProjectPanel
@@ -100,7 +123,7 @@ function App() {
   
   const mainContent = project === null
     ? <NoProjectPrompt
-        onOpenProject={handleUpdateProject}
+        onOpenProject={handleOpenProject}
         setShowCreateDialog={setShowCreateDialog}
       />
     : <ImageEditor
@@ -108,6 +131,11 @@ function App() {
         onUpdateImage={handleUpdateImage}
         onRotateSelectedImage={handleRotateSelectedImage}
       />
+  
+  const actionButtons = <>
+    <Button variant='outlined' color='inherit' onClick={handleOpenProject}>Open Project</Button>
+    <Button variant='contained' color='warning' onClick={handleClearProject}>Close Project</Button>
+  </>
 
   return (
     <>
@@ -117,6 +145,7 @@ function App() {
       <Layout
         drawer={drawerContent}
         main={mainContent}
+        actionButtons={actionButtons}
       >
       </Layout>
       <CreateProjectDialog

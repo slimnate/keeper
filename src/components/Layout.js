@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { CssBaseline, Divider, Drawer, IconButton, Toolbar, Typography, Tooltip } from "@mui/material";
+import { CssBaseline, Divider, Drawer, IconButton, Toolbar, Typography, Tooltip, Stack } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled, useTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
@@ -47,7 +47,7 @@ const AppBar = styled(MuiAppBar, {
     })
 }));
 
-export default function Layout({ drawer, main }) {
+export default function Layout({ drawer, main, actionButtons }) {
     const theme = useTheme();
     const [open, setOpen] = useState(true);
 
@@ -81,9 +81,12 @@ export default function Layout({ drawer, main }) {
                             <MenuIcon />
                         </IconButton>
                     </Tooltip>
-                    <Typography variant='h6' noWrap component='div'>
-                        {/* Title */}
+                    <Typography variant='h6' flexGrow={1}>
+                        
                     </Typography>
+                    <Stack direction='row' spacing={1}>
+                        {actionButtons}
+                    </Stack>
                 </Toolbar>
             </AppBar>
 

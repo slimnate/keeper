@@ -75,7 +75,7 @@ function createProject(event, {name, basePath, exportPath}) {
     try {
         // if project file already exists, open it instead
         if(fs.existsSync(project.projectFile)) {
-            return openProject(project.projectFile);
+            return openProject(null, project.projectFile);
         }
 
         // loop through files in folder to find images
