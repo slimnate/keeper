@@ -10,14 +10,16 @@ import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Layout from './components/Layout';
-import NoProjectDialog from './components/NoProjectDialog'
+import NoProjectPrompt from './components/NoProjectPrompt'
 import ImageEditor from './components/ImageEditor';
 import ProjectPanel from './components/ProjectPanel';
+import CreateProjectDialog from './components/CreateProjectDialog';
 
 function App() {
   // const [project, setProject] = useState(window.testProject);
   const [project, setProject] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   const handleUpdateImage = (newImage) => {
     setProject({
@@ -82,9 +84,9 @@ function App() {
   }
 
   const drawerContent = project === null
-    ? <NoProjectDialog
-        onUpdateProject={handleUpdateProject}
-        onCreateProject={handleCreateProject}
+    ? <NoProjectPrompt
+        onOpenProject={handleUpdateProject}
+        setShowCreateDialog={setShowCreateDialog}
       />
     : <ProjectPanel
         project={project}
@@ -97,9 +99,9 @@ function App() {
       />;
   
   const mainContent = project === null
-    ? <NoProjectDialog 
-        onUpdateProject={handleUpdateProject}
-        onCreateProject={handleCreateProject}
+    ? <NoProjectPrompt
+        onOpenProject={handleUpdateProject}
+        setShowCreateDialog={setShowCreateDialog}
       />
     : <ImageEditor
         image={project.images[selectedImage]}
@@ -117,6 +119,11 @@ function App() {
         main={mainContent}
       >
       </Layout>
+      <CreateProjectDialog
+        show={showCreateDialog}
+        setShowCreateDialog={setShowCreateDialog}
+        onCreateProject={handleCreateProject}
+      />
     </>
   );
 }
