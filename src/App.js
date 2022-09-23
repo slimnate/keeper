@@ -23,6 +23,13 @@ function App() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(false);
+
+  const handleUpdateProgress = (event, progress) => {
+    console.log('progress updated');
+    console.log(progress);
+    setProgress(progress);
+  }
 
   const handleUpdateImage = (newImage) => {
     setProject({
@@ -96,6 +103,7 @@ function App() {
       }
       console.log({ msg: 'created project', project });
       setProject(project);
+      setProgress(false);
       setLoading(false);
     })
   }
@@ -112,6 +120,11 @@ function App() {
     })
   }
 
+  console.log(window.progress);
+  //register progress handler
+  window.progress.onUpdateProgress(handleUpdateProgress);
+
+  // computed components
   const drawerContent = project === null
     ? <NoProjectPrompt
         onOpenProject={handleOpenProject}
@@ -156,7 +169,11 @@ function App() {
         }}>
           <Stack display='flex' alignItems='center'>
             <CircularProgress color='inherit' />
-            <Typography variant='overline' fontSize={18}>Processing images...</Typography>
+            {progress && (
+              <Typography variant='overline' fontSize={18}>
+                Processing image {progress.current} of {progress.total}
+              </Typography>
+            )}
           </Stack>
       </Backdrop>
       <ToastContainer
