@@ -14,13 +14,15 @@ import NoProjectPrompt from './components/NoProjectPrompt'
 import ImageEditor from './components/ImageEditor';
 import ProjectPanel from './components/ProjectPanel';
 import CreateProjectDialog from './components/CreateProjectDialog';
-import { Button } from '@mui/material';
+import { Backdrop, Button, CircularProgress, Typography } from '@mui/material';
+import { Stack } from '@mui/system';
 
 function App() {
   // const [project, setProject] = useState(window.testProject);
   const [project, setProject] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleUpdateImage = (newImage) => {
     setProject({
@@ -84,6 +86,7 @@ function App() {
 
   const handleCreateProject = (newProject) => {
     console.log({ msg: 'creating project', newProject });
+    setLoading(true);
     window.api.fs.createProject(newProject).then(({err, project}) => {
       console.log(project);
       if(err) {
@@ -93,15 +96,18 @@ function App() {
       }
       console.log({ msg: 'created project', project });
       setProject(project);
+      setLoading(false);
     })
   }
 
   const handleExportProject = () => {
+    setLoading(true);
     window.api.fs.exportProject(project).then(({err, result}) => {
       if(err) {
         toast.error(`Error exporting project: ${err}`);
         return;
       }
+      setLoading(false);
       toast.success(`Exported ${result.imageCount} images to ${project.exportPath}`);
     })
   }
@@ -139,15 +145,23 @@ function App() {
 
   return (
     <>
-      <ToastContainer
-        position='top-center'
-      />
       <Layout
         drawer={drawerContent}
         main={mainContent}
         actionButtons={actionButtons}
       >
       </Layout>
+      <Backdrop open={loading} sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1
+        }}>
+          <Stack display='flex' alignItems='center'>
+            <CircularProgress color='inherit' />
+            <Typography variant='overline' fontSize={18}>Processing images...</Typography>
+          </Stack>
+      </Backdrop>
+      <ToastContainer
+        position='top-center'
+      />
       <CreateProjectDialog
         show={showCreateDialog}
         setShowCreateDialog={setShowCreateDialog}
