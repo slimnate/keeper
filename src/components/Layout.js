@@ -104,7 +104,9 @@ export default function Layout({ drawer, main, actionButtons }) {
                 open={open}
             >
                 <Toolbar variant='dense'>
-                    <Typography variant='h6' noWrap component='div' flexGrow={1} flexDirection='row' align="center">Project</Typography>
+                    <Typography variant='h6' noWrap component='div' align="center" sx={{
+                        flexGrow: 1,
+                    }}>Project</Typography>
                     <Tooltip title='Hide Project Panel' enterDelay={700}>
                         <IconButton onClick={handleDrawerClose}>
                             {theme.direction === 'ltr' ? <ChevronLeft /> : <ChevronRight />}
