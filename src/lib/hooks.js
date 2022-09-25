@@ -23,3 +23,20 @@ export function useOnScreen(rootRef, elemRef) {
     console.log('hook - isOnScreen', isOnScreen);
     return isOnScreen;
 }
+
+export function useWatchProgress(loading) {
+    const [progress, setProgress] = useState(false);
+
+    if(!loading) {
+        return false;
+    }
+
+    const handleUpdateProgress = (event, progress) => {
+        console.log('progress updated');
+        console.log(progress);
+        setProgress(progress);
+    }
+
+    window.progress.onUpdateProgress(handleUpdateProgress);
+    return progress;
+}

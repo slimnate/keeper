@@ -16,6 +16,7 @@ import ProjectPanel from './components/ProjectPanel';
 import CreateProjectDialog from './components/CreateProjectDialog';
 import { Backdrop, Button, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
+import { useWatchProgress } from './lib/hooks';
 
 function App() {
   // const [project, setProject] = useState(window.testProject);
@@ -23,13 +24,7 @@ function App() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(false);
-
-  const handleUpdateProgress = (event, progress) => {
-    console.log('progress updated');
-    console.log(progress);
-    setProgress(progress);
-  }
+  const progress = useWatchProgress(loading);
 
   const handleUpdateImage = (newImage) => {
     setProject({
@@ -49,7 +44,6 @@ function App() {
 
   const handleRotateSelectedImage = () => {
     const imageCount = project.images.length;
-    console.log({selectedImage, imageCount});
     if(selectedImage === imageCount - 1) {
       setSelectedImage(0);
     } else {
@@ -103,7 +97,6 @@ function App() {
       }
       console.log({ msg: 'created project', project });
       setProject(project);
-      setProgress(false);
       setLoading(false);
     })
   }
@@ -119,10 +112,6 @@ function App() {
       toast.success(`Exported ${result.imageCount} images to ${project.exportPath}`);
     })
   }
-
-  console.log(window.progress);
-  //register progress handler
-  window.progress.onUpdateProgress(handleUpdateProgress);
 
   // computed components
   const drawerContent = project === null
