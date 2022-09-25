@@ -1,5 +1,7 @@
 import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme, Typography } from "@mui/material";
+import { useEffect, useRef } from "react";
 import { getImagePath } from "../lib/helpers";
+import { useOnScreen } from "../lib/hooks";
 
 import ProjectInfo from "./ProjectInfo";
 
@@ -7,6 +9,9 @@ import ProjectInfo from "./ProjectInfo";
 export default function ProjectPanel({ project, selectedImage, onUpdateSelectedImage, onUpdateImage, onUpdateProject, onSaveProject, onExportProject }) {
     const theme = useTheme();
     const imageCount = project.images.length;
+    const imageListRef = useRef();
+    const activeListItemRef = useRef();
+    const activeItemVisible = useOnScreen(imageListRef, activeListItemRef);
 
     const handleToggleKeep = id => () => {
         const image = project.images.filter(image => image.id === id).pop();
@@ -30,11 +35,20 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
          onExportProject()
     }
 
+    useEffect(() => {
+        if(!activeItemVisible) {
+            console.log('scrolling');
+            activeListItemRef.current.scrollIntoView();
+        }
+    }, [selectedImage]);
+
     const imageListItems = project.images.map(image => {
         const { id, relativePath, keep } = image;
         const selected = id === selectedImage;
 
         return <ListItem
+                    ref={selectedImage === id ? activeListItemRef : null}
+                    id={`list-item-${id}`}
                     key={id}
                     onClick={handleImageListItemClicked(id)}
                     sx={{
@@ -70,7 +84,7 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
     
     return (
         <>
-            <Paper elevation={2} sx={{
+            <Paper ref={imageListRef} elevation={2} sx={{
                 flexGrow: 1,
                 margin: '10px',
                 maxHeight: '100%',
