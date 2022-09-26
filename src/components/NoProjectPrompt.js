@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/system";
 import { Button, Paper, Typography } from "@mui/material";
 
-export default function NoProjectPrompt({width = 300, setShowCreateDialog, onOpenProject }) {
+export default function NoProjectPrompt({width = 280, setShowCreateDialog, onOpenProject }) {
 
     const handleCreateButtonClick = (e) => {
         setShowCreateDialog(true);
