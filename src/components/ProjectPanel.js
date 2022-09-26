@@ -12,6 +12,9 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
     const imageListRef = useRef();
     const activeListItemRef = useRef();
     const activeItemVisible = useOnScreen(imageListRef, activeListItemRef);
+    const selectedCount = project.images.filter(img => {
+        return img.keep;
+    }).length;
 
     const handleToggleKeep = id => () => {
         const image = project.images.filter(image => image.id === id).pop();
@@ -112,7 +115,7 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
                 <ProjectInfo project={project} onUpdateProject={onUpdateProject}></ProjectInfo>
                 <ButtonGroup fullWidth={true}>
                     <Tooltip title='Export the selected images to the export folder'>
-                        <Button variant='contained' color="secondary" onClick={handleExportProject}>Export</Button>
+                        <Button variant='contained' color="secondary" onClick={handleExportProject}>Export ({selectedCount})</Button>
                     </Tooltip>
                     <Tooltip title='Save changes to project'>
                         <Button variant='contained' onClick={handleSaveProject}>Save</Button>
