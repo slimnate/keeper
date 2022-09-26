@@ -116,7 +116,7 @@ export default function Layout({ drawer, main, actionButtons }) {
                 <Divider />
                 {drawer}
             </Drawer>
-            <Main open={open} flexDirection='column' sx={{height: '100%'}}>
+            <Main open={open} sx={{height: '100%'}}>
                 <Box flexGrow={0}><Box sx={{ width: '100%', height: '64px'}} /></Box>
                 {main}
             </Main>

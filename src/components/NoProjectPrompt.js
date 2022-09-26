@@ -16,7 +16,6 @@ export default function NoProjectPrompt({width = 300, setShowCreateDialog, onOpe
         }}>
             <Paper
                 elevation={4}
-                flexGrow={1}
                 sx={{
                     width: width,
                 }}
