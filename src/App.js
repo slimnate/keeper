@@ -24,6 +24,7 @@ function App() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [shouldScroll, setShouldScroll] = useState(false);
   const progress = useWatchProgress(loading);
 
   const handleUpdateImage = (newImage) => {
@@ -49,6 +50,7 @@ function App() {
     } else {
       setSelectedImage(selectedImage+1);
     }
+    setShouldScroll(true);
   }
 
   const handleSaveProject = () => {
@@ -122,6 +124,8 @@ function App() {
     : <ProjectPanel
         project={project}
         selectedImage={selectedImage}
+        shouldScroll={shouldScroll}
+        setShouldScroll={setShouldScroll}
         onUpdateImage={handleUpdateImage}
         onUpdateProject={handleUpdateProject}
         onUpdateSelectedImage={handleUpdateSelectedImage}

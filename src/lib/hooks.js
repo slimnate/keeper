@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useOnScreen(rootRef, elemRef) {
+export function useOnScreen(rootRef, elemsRef, indexToWatch) {
     const [isOnScreen, setIsIonScreen] = useState(true);
     const observerRef = useRef(null);
 
@@ -14,11 +14,12 @@ export function useOnScreen(rootRef, elemRef) {
     })
 
     useEffect(() => {
-        console.log('observer attached')
-        observerRef.current.observe(elemRef.current);
+        console.log('observer attached to: ')
+        console.log(elemsRef.current[indexToWatch]);
+        observerRef.current.observe(elemsRef.current[indexToWatch]);
 
         return () => observerRef.current.disconnect();
-    }, [elemRef]);
+    }, [indexToWatch, elemsRef]);
 
     console.log('hook - isOnScreen', isOnScreen);
     return isOnScreen;
