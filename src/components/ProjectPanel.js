@@ -1,5 +1,6 @@
 import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme, Typography } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useCustomCompareEffect } from "react-use";
 import { getImagePath } from "../lib/helpers";
 import { useOnScreen } from "../lib/hooks";
 
@@ -38,12 +39,16 @@ export default function ProjectPanel({ project, selectedImage, onUpdateSelectedI
          onExportProject()
     }
 
-    useEffect(() => {
+    useCustomCompareEffect(() => {
+        console.log('customEffectHook');
+        console.log({activeItemVisible});
         if(!activeItemVisible) {
-            console.log('scrolling');
+            console.log('scrolling to view');
             activeListItemRef.current.scrollIntoView();
         }
-    }, [selectedImage]);
+    }, [selectedImage, activeItemVisible], ([currSelected, currVisible], [prevSelected, prevVisible]) => {
+        return prevSelected === currSelected;
+    })
 
     const imageListItems = project.images.map(image => {
         const { id, relativePath, keep } = image;
