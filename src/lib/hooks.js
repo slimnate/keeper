@@ -6,22 +6,31 @@ export function useOnScreen(rootRef, elemsRef, indexToWatch) {
 
     useEffect(() => {
         observerRef.current = new IntersectionObserver(([entry]) => {
-            console.log(`setIsOnScreen(${entry.isIntersecting})`);
-            setIsIonScreen(entry.isIntersecting);
+            if(elemsRef.current[indexToWatch].id === entry.target.id){
+                console.log(`${entry.target.id} - setIsOnScreen(${entry.isIntersecting})`);
+                setIsIonScreen(entry.isIntersecting);
+            }
         }, {
-            root: rootRef.current
+            root: rootRef.current,
+            threshold: 1,
         });
     })
 
     useEffect(() => {
-        console.log('observer attached to: ')
-        console.log(elemsRef.current[indexToWatch]);
-        observerRef.current.observe(elemsRef.current[indexToWatch]);
+        const elemRef = elemsRef.current[indexToWatch];
+        if (!elemRef) return;
 
-        return () => observerRef.current.disconnect();
+        console.log('observer attached to: ', elemRef.id)
+        observerRef.current.observe(elemRef);
+
+        return () => {
+            console.log('unobserving: ', elemRef.id);
+            observerRef.current.unobserve(elemRef);
+            observerRef.current.disconnect();
+        }
     }, [indexToWatch, elemsRef]);
 
-    console.log('hook - isOnScreen', isOnScreen);
+    console.log(`hook - isOnScreen(${indexToWatch})`, isOnScreen);
     return isOnScreen;
 }
 

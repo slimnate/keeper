@@ -48,6 +48,10 @@ export default function ProjectPanel({ project, selectedImage, shouldScroll, set
         if(!activeItemVisible && shouldScroll) {
             scrollToSelectedListItem();
         }
+        // this temporarily fixes the bug with scrolling errantly after navigating with error keys.
+        // ultimately this is an issue of the IntersectionOberver and useOnScreen hook that needs to
+        // be fixed there
+        setShouldScroll(false);
     }, [shouldScroll, activeItemVisible, scrollToSelectedListItem]);
 
     const imageListItems = useMemo(() => {
