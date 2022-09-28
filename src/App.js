@@ -6,7 +6,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Layout from './components/Layout';
@@ -14,13 +14,15 @@ import NoProjectPrompt from './components/NoProjectPrompt'
 import ImageEditor from './components/ImageEditor';
 import ProjectPanel from './components/ProjectPanel';
 import CreateProjectDialog from './components/CreateProjectDialog';
-import { Backdrop, Button, CircularProgress, Typography } from '@mui/material';
+import { Backdrop, Button, CircularProgress, createTheme, ThemeProvider, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useWatchProgress } from './lib/hooks';
 import { rollingIncrement } from './lib/helpers';
 import { useKey } from 'react-use';
+import { themeOptions } from './lib/theme';
 
 function App() {
+  const theme = createTheme(themeOptions);
   // const [project, setProject] = useState(window.testProject);
   const [project, setProject] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -147,30 +149,32 @@ function App() {
   
   const actionButtons = <>
     <Button variant='outlined' color='inherit' onClick={handleOpenProject}>Open Project</Button>
-    <Button variant='contained' color='warning' onClick={handleClearProject}>Close Project</Button>
+    <Button variant='contained' color='error' onClick={handleClearProject}>Close Project</Button>
   </>
 
   // render
   return (
     <>
-      <Layout
-        drawer={drawerContent}
-        main={mainContent}
-        actionButtons={actionButtons}
-      >
-      </Layout>
-      <Backdrop open={loading} sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1
-        }}>
-          <Stack display='flex' alignItems='center'>
-            <CircularProgress color='inherit' />
-            {progress && (
-              <Typography variant='overline' fontSize={18}>
-                Processing image {progress.current} of {progress.total}
-              </Typography>
-            )}
-          </Stack>
-      </Backdrop>
+      <ThemeProvider theme={theme}>
+        <Layout
+          drawer={drawerContent}
+          main={mainContent}
+          actionButtons={actionButtons}
+        >
+        </Layout>
+        <Backdrop open={loading} sx={{
+            zIndex: (theme) => theme.zIndex.drawer + 1
+          }}>
+            <Stack display='flex' alignItems='center'>
+              <CircularProgress color='inherit' />
+              {progress && (
+                <Typography variant='overline' fontSize={18}>
+                  Processing image {progress.current} of {progress.total}
+                </Typography>
+              )}
+            </Stack>
+        </Backdrop>
+      </ThemeProvider>
       <ToastContainer
         position='top-center'
       />
