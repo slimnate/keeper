@@ -59,11 +59,24 @@ function getIpcInvoker(ipcRenderer, api) {
     return invoker;
 }
 
+const rollingIncrement = (current, start, end, decrement = false) => {
+    const change = decrement ? -1 : 1;
+
+    // rotate from start to end
+    if(decrement && current === start) return end;
+
+    // rotate from end to start
+    if(!decrement && current === end) return start;
+
+    return current + change;
+}
+
 const helpers = {
     slugify,
     getImagePath,
     registerIpcHandlers,
     getIpcInvoker,
+    rollingIncrement,
 }
 
 module.exports = helpers;

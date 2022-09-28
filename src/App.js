@@ -6,7 +6,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Layout from './components/Layout';
@@ -17,6 +17,8 @@ import CreateProjectDialog from './components/CreateProjectDialog';
 import { Backdrop, Button, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useWatchProgress } from './lib/hooks';
+import { rollingIncrement } from './lib/helpers';
+import { useKey } from 'react-use';
 
 function App() {
   // const [project, setProject] = useState(window.testProject);
@@ -43,13 +45,9 @@ function App() {
     setSelectedImage(id);
   }
 
-  const handleRotateSelectedImage = () => {
-    const imageCount = project.images.length;
-    if(selectedImage === imageCount - 1) {
-      setSelectedImage(0);
-    } else {
-      setSelectedImage(selectedImage+1);
-    }
+  const handleRotateSelectedImage = (decrement = false) => {
+    const newSelectedImage = rollingIncrement(selectedImage, 0, project.images.length - 1, decrement);
+    setSelectedImage(newSelectedImage);
     setShouldScroll(true);
   }
 
@@ -115,6 +113,9 @@ function App() {
     })
   }
 
+  useKey('ArrowRight', (event) => handleRotateSelectedImage(), {}, [project, selectedImage])
+  useKey('ArrowLeft', (event) => handleRotateSelectedImage(true), {}, [project, selectedImage])
+
   // computed components
   const drawerContent = project === null
     ? <NoProjectPrompt
@@ -149,6 +150,7 @@ function App() {
     <Button variant='contained' color='warning' onClick={handleClearProject}>Close Project</Button>
   </>
 
+  // render
   return (
     <>
       <Layout
