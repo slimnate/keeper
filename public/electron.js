@@ -3,8 +3,10 @@ const { app, BrowserWindow, protocol, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
 const api = require('../src/lib/api');
 const { registerIpcHandlers } = require('../src/lib/helpers');
-const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+const edi = isDev ? require('electron-devtools-installer') : null;
 
+const appPath = isDev ? 'http://localhost:3000/'
+                      : `file://${path.join(__dirname, '../build/index.html')}`
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -16,23 +18,18 @@ function createWindow() {
         },
     });
 
-    win.loadURL(
-        isDev
-            ? 'http://localhost:3000/'
-            : `file://${path.join(__dirname, '../build/index.html')}`
-    );
-
     if(isDev) {
         win.webContents.openDevTools({ mode: 'detach' });
     }
 
+    win.loadURL(appPath);
     api.setWindow(win);
 }
 
 app.whenReady()
 .then(() => {
-    if(!isDev) return;
-    return installExtension(REACT_DEVELOPER_TOOLS)
+    if(isDev)
+        return edi.installExtension(edi.REACT_DEVELOPER_TOOLS)
 })
 .then(() => {
     //register atom protocol
