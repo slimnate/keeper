@@ -1,9 +1,13 @@
 const path = require('path');
-const { app, BrowserWindow, protocol, ipcMain } = require('electron');
+const { app, BrowserWindow, protocol, ipcMain, dialog } = require('electron');
 const isDev = require('electron-is-dev');
 const api = require('../src/lib/api');
 const { registerIpcHandlers } = require('../src/lib/helpers');
-const edi = isDev ? require('electron-devtools-installer') : null;
+let installExtension, REACT_DEVELOPER_TOOLS;
+
+if( isDev ) {
+    ({ default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer'))
+}
 
 const appPath = isDev ? 'http://localhost:3000/'
                       : `file://${path.join(__dirname, '../build/index.html')}`
@@ -23,13 +27,14 @@ function createWindow() {
     }
 
     win.loadURL(appPath);
+    win.maximize();
     api.setWindow(win);
 }
 
 app.whenReady()
 .then(() => {
     if(isDev)
-        return edi.installExtension(edi.REACT_DEVELOPER_TOOLS)
+        return installExtension(REACT_DEVELOPER_TOOLS);
 })
 .then(() => {
     //register atom protocol
@@ -42,7 +47,9 @@ app.whenReady()
 
     //create window
     createWindow();
-});
+}).catch(err => {
+    dialog.showErrorBox('Error Loading', err.toString());
+})
 
 
 app.on('window-all-closed', () => {
