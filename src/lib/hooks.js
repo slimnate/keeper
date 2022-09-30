@@ -42,8 +42,6 @@ export function useWatchProgress(loading) {
     }
 
     const handleUpdateProgress = (event, progress) => {
-        console.log('progress updated');
-        console.log(progress);
         setProgress(progress);
     }
 

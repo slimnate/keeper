@@ -66,21 +66,23 @@ function App() {
   }
 
   const handleOpenProject = () => {
-      window.api.fs.openFile().then(files => {
-          if(files === undefined) return;
-          const file = files[0];
+    window.api.fs.openFile().then(files => {
+      setLoading(true);
+      if(files === undefined) return;
+      const file = files[0];
 
-          console.log(file);
+      console.log(file);
 
-          window.api.fs.openProject(file).then(({err, project}) => {
-              console.log(project);
-              if(err) {
-                  toast(`Error opening project: ${err}`);
-                  return;
-              }
-              setProject(project);
-          });
+      window.api.fs.openProject(file).then(({err, project}) => {
+        console.log(project);
+        if(err) {
+          toast(`Error opening project: ${err}`);
+          return;
+        }
+        setProject(project);
+        setLoading(false);
       });
+    });
   }
 
   const handleClearProject = () => {
@@ -191,8 +193,18 @@ function App() {
             <Stack display='flex' alignItems='center'>
               <CircularProgress color='inherit' />
               {progress && (
+                <>
+                  <Typography variant='overline' fontSize={18}>
+                    {progress.message ? progress.message : 'Processing...'}
+                  </Typography>
+                  <Typography variant='overline' fontSize={18}>
+                    {progress.current} of {progress.total}
+                  </Typography>
+                </>
+              )}
+              {!progress && (
                 <Typography variant='overline' fontSize={18}>
-                  Processing image {progress.current} of {progress.total}
+                  Loading...
                 </Typography>
               )}
             </Stack>

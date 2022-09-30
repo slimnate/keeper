@@ -43,13 +43,17 @@ function isRawFormat(name) {
     return RAW_FORMATS.includes(path.extname(name).toLowerCase());
 }
 
+async function generatePreview(image) {
+    const previewPath = await extractd.generate(image.path, { datauri: true, compact: true, persist: true });
+    return {
+        ...image,
+        previewPath
+    }
+}
+
 async function performConversions(image) {
     if(isRawFormat(image.relativePath)) {
-        const previewPath = await extractd.generate(image.path, { datauri: true, compact: true, persist: true });
-        return {
-            ...image,
-            previewPath
-        }
+        return await generatePreview(image);
     } else {
         return image;
     }
@@ -115,7 +119,11 @@ async function createProject(event, {name, basePath, exportPath}) {
         let currentEntry = 0;
         for(const entry of entries) {
             currentEntry++;
-            window.webContents.send('progress', { total: entryCount, current: currentEntry });
+            window.webContents.send('progress', {
+                message: 'Generating image preview...',
+                total: entryCount,
+                current: currentEntry
+            });
             if(entry.isFile()){
                 const name = entry.name;
                 if(isImageFile(name)) {
@@ -134,9 +142,37 @@ async function createProject(event, {name, basePath, exportPath}) {
     return { project };
 }
 
-function openProject(event, filePath) {
+async function openProject(event, filePath) {
     try {
-        return { project: readProjectFile(filePath) }
+        const project = readProjectFile(filePath)
+
+        //check images for missing previews
+        const entryCount = project.images.length;
+        let currentEntry = 0;
+        for(const i in project.images) {
+            currentEntry++;
+            const image = project.images[i];
+            window.webContents.send('progress', {
+                message: 'Validating image...',
+                total: entryCount,
+                current: currentEntry
+            });
+            if(image.previewPath) {
+                if(!fs.existsSync(image.previewPath)) {
+                    window.webContents.send('progress', {
+                        message: 'Regenerating image preview...',
+                        total: entryCount,
+                        current: currentEntry
+                    });
+                    project.images[i] = await generatePreview(image);
+                }
+            }
+        }
+
+        //re-save project file to update image paths
+        writeProjectFile(project);
+
+        return { project };
     } catch (e) {
         return { err: e.message };
     }
