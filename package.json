@@ -68,6 +68,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
+        "icon": "public/icons/mac/icon.icns",
+        "name": "Keeper"
       },
       "makers": [
         {
