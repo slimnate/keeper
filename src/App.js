@@ -114,9 +114,33 @@ function App() {
       toast.success(`Exported ${result.imageCount} images to ${project.exportPath}`);
     })
   }
+  
+  
+  const handleCurrentImageAction = (action) => () => {
+    const image = project.images[selectedImage];
+
+    console.log({action, image});
+
+    if(action === 'keep') {
+        // update image to keep
+        handleUpdateImage({
+            ...image,
+            keep: true,
+        });
+    } else if (action === 'discard') {
+        // update image to discard
+        handleUpdateImage({
+            ...image,
+            keep: false,
+        });
+    }
+    handleRotateSelectedImage();
+}
 
   useKey('ArrowRight', (event) => handleRotateSelectedImage(), {}, [project, selectedImage])
   useKey('ArrowLeft', (event) => handleRotateSelectedImage(true), {}, [project, selectedImage])
+  useKey('ArrowUp', (event) => handleCurrentImageAction('keep'), {}, [project, selectedImage])
+  useKey('ArrowDown', (event) => handleCurrentImageAction('discard'), {}, [project, selectedImage])
 
   // computed components
   const drawerContent = project === null
@@ -143,8 +167,7 @@ function App() {
       />
     : <ImageEditor
         image={project.images[selectedImage]}
-        onUpdateImage={handleUpdateImage}
-        onRotateSelectedImage={handleRotateSelectedImage}
+        onImageAction={handleCurrentImageAction}
       />
   
   const actionButtons = <>
