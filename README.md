@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+# Keeper - Photo Organizer
+Keeper is an open source application designed to help photographers organize the images from a photo shoot. It provides the ability to preview the images in a given folder, marking each as "keep" or "discard", and then allows the user to export only the images marked "keep" to a new sub-folder.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Installation
 
-## Available Scripts
+#### MAC
+Currently, there are only release builds for Mac, to install from the a binary, please visit the [release page](https://github.com/slimnate/keeper/releases) on github.
 
-In the project directory, you can run:
+#### Windows
+Windows users must currently [build the application from source](#building-from-source)
 
-### `npm start`
+#### Linux
+Linux users must currently [build the application from source](#building-from-source)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### Building from source
+First, clone the repository from github:
+```
+git clone https://github.com/slimnate/keeper.git
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Then run the following commands in the source directory:
 
-### `npm test`
+```
+npm install
+npm run make
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+This will package the application to the `out` directory, and leave final builds under the `out/make` directory.
 
-### `npm run build`
+## Usage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+When you open the application, you will be greeted with the getting started page, which will prompt you to either create a new project, or open an existing one.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Creating a new project
+To create a project, click the **Create new project** button to open the create project dialog. Provide a name for the project, and use the folder button to browse for a folder with the images you want to add to the project. Then provide the name for the sub-folder that the kept images will be exported to.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+> **Note:** If you click away from the project dialog your input will be saved even after the dialog is gone, but if you click **Cancel** the the input will be lost.
 
-### `npm run eject`
+Once you create the project, the application may perform some pre-processing[<sup>1<sup>](#camera-raw-support) of the images within the folder, create the new project file, and you will be greeted with the [Main Project View](#main-project-view).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Opening a project
+To open a project, you will need to navigate to the project folder and select the project file from within that folder.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Main Project View
+The main view consists of the [Project Panel](#project-panel), and the [Image Viewer](#image-viewer) components. These are the main components for interacting with a project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### Project Panel
+The project panel will display a list of the images within the project folder, and metadata about the project.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Image List
+: The image list shows all the images in the project, and their current status. Click on an image to view it in the [Image Preview](#image-preview) panel. Use the toggle switches on the image list to mark images as keep/discard.
 
-## Learn More
+Project Name
+: The name of the project. This will not affect the filename of the project file, only the display name within the application
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Project Folder
+: **READ ONLY** - Shows the base folder path for the current project.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Export Folder
+: The current folder where 'kept' images will be exported (_relative to the project folder_). The small text below this field shows the full path to the export folder.
 
-### Code Splitting
+Export Button
+: Export all the 'kept' images to the export folder. Shows the number of images that will be exported in parenthesis on the button. _Recommended to save before exporting._
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Save Button
+: Save changes to the current project (name, export folder, selections). _Recommended to save before exporting._
 
-### Analyzing the Bundle Size
+#### Image Viewer
+The image preview is exactly what it sounds, a full size[*<sup>2</sup>](#full-size-images) preview of the selected image, along with two action buttons on the bottom of the screen.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Discard Button
+: Remove the currently selected image from list of keepers.
 
-### Making a Progressive Web App
+Keep Button
+: Add the currently selected image to list of keepers.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+> **Note:** Clicking either of the action buttons will apply the selected action, and then automatically advance the selected image to show the next image in the list.
 
-### Advanced Configuration
+### Keyboard shortcuts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+You can use the left and right arrow keys to navigate through the image list, in addition to clicking in the image panel
 
-### Deployment
+### More Info
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+##### Camera raw support
+This application supports the processing of special [Camera RAW files](https://fileinfo.com/filetypes/camera_raw). This is supported by checking the file type of each image at project creation and generating temporary JPG copies of the images using the [extractd](https://www.npmjs.com/package/extractd) library. This is the preprocessing of images referred to in the project creation section.
 
-### `npm run build` fails to minify
+> **Note:** The original RAW files are never modified, and are what will be copied to the export folder upon project export.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+##### "Full Size" images
+The Image Viewer shows the image in the biggest possible size that will fit on the screen without scrolling. For large images this will not actually be _full size_. **Click-to-zoom support is planned for future versions.**
