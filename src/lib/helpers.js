@@ -27,38 +27,6 @@ function getImagePath(image) {
     return `atom://${image.previewPath ? image.previewPath : image.path}`
 }
 
-function registerIpcHandlers(ipcMain, api) {
-    //register ipc event handlers for all methods from api.js
-    Object.keys(api).forEach((prefix) => {
-        // ignore base level functions (like configure)
-        if (typeof api[prefix] === 'function') {
-            return;
-        }
-        Object.keys(api[prefix]).forEach((funcName) => {
-            console.log(`registering handler for ${prefix}:${funcName}`)
-            ipcMain.handle(`${prefix}:${funcName}`, api[prefix][funcName]);
-        })
-    });
-}
-
-function getIpcInvoker(ipcRenderer, api) {
-    let invoker = {};
-    Object.keys(api)
-    .filter(prefix => {
-        // ignore base level functions (like configure)
-        return typeof api[prefix] !== 'function';
-    })
-    .forEach(prefix => {
-        let subModule = {};
-        Object.keys(api[prefix]).forEach(funcName => {
-            console.log(`registering invoker for ${prefix}:${funcName}`)
-            subModule[funcName] = (props) => ipcRenderer.invoke(`${prefix}:${funcName}`, props);
-        })
-        invoker[prefix] = subModule;
-    })
-    return invoker;
-}
-
 const rollingIncrement = (current, start, end, decrement = false) => {
     const change = decrement ? -1 : 1;
 
@@ -74,8 +42,6 @@ const rollingIncrement = (current, start, end, decrement = false) => {
 const helpers = {
     slugify,
     getImagePath,
-    registerIpcHandlers,
-    getIpcInvoker,
     rollingIncrement,
 }
 
