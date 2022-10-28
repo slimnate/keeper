@@ -1,7 +1,6 @@
 const path = require('path');
 const { contextBridge, ipcRenderer } = require('electron');
 const api = require('../src/lib/api');
-const { getIpcInvoker } = require('../src/lib/helpers');
 
 const testBasePath = path.join(__dirname, '../test')
 
@@ -28,7 +27,7 @@ const testProject = {
 contextBridge.exposeInMainWorld('testProject', testProject);
 
 // Automatically register all API invokers and expose to main world
-const apiInvoker = getIpcInvoker(ipcRenderer, api);
+const apiInvoker = api.ipc.getInvoker(ipcRenderer);
 console.log({apiInvoker});
 
 contextBridge.exposeInMainWorld('api', apiInvoker);

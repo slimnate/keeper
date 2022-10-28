@@ -2,7 +2,6 @@ const path = require('path');
 const { app, BrowserWindow, protocol, ipcMain, dialog } = require('electron');
 const isDev = require('electron-is-dev');
 const api = require('../src/lib/api');
-const { registerIpcHandlers } = require('../src/lib/helpers');
 let installExtension, REACT_DEVELOPER_TOOLS;
 
 if( isDev ) {
@@ -43,7 +42,7 @@ app.whenReady()
         cb({ path: url.substring(7) });
     });
 
-    registerIpcHandlers(ipcMain, api);
+    api.ipc.register(ipcMain);
 
     //create window
     createWindow();

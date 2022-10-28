@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./helpers');
 const extractd = require('extractd');
+const IpcApi = require('slim-electron-ipc-api');
 
 const STANDARD_FORMATS = ['.png', '.gif', '.jpg', '.jpeg', ];
 const RAW_FORMATS = ['.cr2', '.cr3', ];
@@ -225,7 +226,6 @@ function exportProject(event, project) {
 }
 
 const api = {
-    setWindow,
     fs: {
         openFolder,
         openFile,
@@ -236,4 +236,7 @@ const api = {
     }
 }
 
-module.exports = api;
+module.exports = {
+    setWindow,
+    ipc: new IpcApi(api)
+};
