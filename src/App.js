@@ -80,8 +80,9 @@ function App() {
           return;
         }
         setProject(project);
-        setLoading(false);
-      });
+      })
+    }).finally(() => {
+      setLoading(false);
     });
   }
 
