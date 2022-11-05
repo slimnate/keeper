@@ -60,7 +60,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
     // if no active windows, create new one
-    if(BrowserWindow.getAllWindows().length === 0) {
+    if(BrowserWindow.getAllWindows().length === 0 && app.isReady()) {
         createWindow();
     }
 })
