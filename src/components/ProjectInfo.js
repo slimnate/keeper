@@ -72,6 +72,7 @@ export default function ProjectInfo({project, width, pathEditable, onUpdateProje
                 value={project?.name}
                 size='small'
                 onChange={handleTitleTextChange}
+                sx={{marginTop: '6px'}}
             />
             <TextField
                 id='project-base-path'
