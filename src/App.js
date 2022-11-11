@@ -55,6 +55,7 @@ function App() {
 
   const handleSaveProject = () => {
     // save project to disk
+    toast.info('Saving...');
     window.api.fs.saveProject(project).then(result => {
       if(result.err) {
         toast.error(`Error saving project: ${result.err}`);
@@ -68,7 +69,10 @@ function App() {
   const handleOpenProject = () => {
     window.api.fs.openFile().then(files => {
       setLoading(true);
-      if(files === undefined) return;
+      if(files === undefined) {
+        setLoading(false);
+        return;
+      } 
       const file = files[0];
 
       console.log(file);
@@ -80,9 +84,8 @@ function App() {
           return;
         }
         setProject(project);
+        setLoading(false);
       })
-    }).finally(() => {
-      setLoading(false);
     });
   }
 
