@@ -31,12 +31,18 @@ This will package the application to the `out` directory, and leave final builds
 
 When you open the application, you will be greeted with the getting started page, which will prompt you to either create a new project, or open an existing one.
 
+![Getting started](img/01-getting-started.png)
+
 ### Creating a new project
 To create a project, click the **Create new project** button to open the create project dialog. Provide a name for the project, and use the folder button to browse for a folder with the images you want to add to the project. Then provide the name for the sub-folder that the kept images will be exported to.
 
-> **Note:** If you click away from the project dialog your input will be saved even after the dialog is gone, but if you click **Cancel** the the input will be lost.
+![Create Project](img/02-create-project.png)
+
+> **Note:** If you click away from the project dialog your input will be restored the next time the dialog opens, but if you click **Cancel** the the input will be lost.
 
 Once you create the project, the application may perform some pre-processing[<sup>1<sup>](#camera-raw-support) of the images within the folder, create the new project file, and you will be greeted with the [Main Project View](#main-project-view).
+
+![Preprocessing](img/03-processing.png)
 
 ### Opening a project
 To open a project, you will need to navigate to the project folder and select the project file from within that folder.
@@ -44,8 +50,12 @@ To open a project, you will need to navigate to the project folder and select th
 ### Main Project View
 The main view consists of the [Project Panel](#project-panel), and the [Image Viewer](#image-viewer) components. These are the main components for interacting with a project.
 
+![Main Project](img/04-main-window.png)
+
 #### Project Panel
 The project panel will display a list of the images within the project folder, and metadata about the project.
+
+![Project Panel](img/05-project-panel.png)
 
 Image List
 : The image list shows all the images in the project, and their current status. Click on an image to view it in the [Image Preview](#image-preview) panel. Use the toggle switches on the image list to mark images as keep/discard.
@@ -67,6 +77,8 @@ Save Button
 
 #### Image Viewer
 The image preview is exactly what it sounds, a full size[*<sup>2</sup>](#full-size-images) preview of the selected image, along with two action buttons on the bottom of the screen.
+
+![Image viewer](img/06-image-viewer.png)
 
 Discard Button
 : Remove the currently selected image from list of keepers.
