@@ -6,7 +6,7 @@ const extractd = require('extractd');
 const IpcApi = require('slim-electron-ipc-api');
 
 const STANDARD_FORMATS = ['.png', '.gif', '.jpg', '.jpeg', ];
-const RAW_FORMATS = ['.cr2', '.cr3', ];
+const RAW_FORMATS = ['.cr2', '.cr3', '.rw2', '.arw', '.nef', '.dng'];
 const IMAGE_FORMATS = [
     ...STANDARD_FORMATS,
     ...RAW_FORMATS,
