@@ -1,9 +1,11 @@
 const { dialog } = require('electron');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { slugify } = require('./helpers');
 const extractd = require('extractd');
 const IpcApi = require('slim-electron-ipc-api');
+const sharp = require('sharp');
 
 const STANDARD_FORMATS = ['.png', '.gif', '.jpg', '.jpeg', ];
 const RAW_FORMATS = ['.cr2', '.cr3', '.rw2', '.arw', '.nef', '.dng'];
@@ -44,20 +46,54 @@ function isRawFormat(name) {
     return RAW_FORMATS.includes(path.extname(name).toLowerCase());
 }
 
-async function generatePreview(image) {
-    const previewPath = await extractd.generate(image.path, { datauri: true, compact: true, persist: true });
-    return {
-        ...image,
-        previewPath
+async function generatePreview(destDir, image) {
+    let inPath = image.relativePath;
+    const inFileName = path.basename(inPath, path.extname(inPath))
+    const outPath = path.join(destDir, `${inFileName}_preview.jpg`);
+    const isRaw = isRawFormat(inPath);
+
+    // perform raw conversion to jpg using extractd library
+    if(isRaw) {
+        // update inPath to point to the extracted jpg file
+        inPath = await extractd.generate(image.path, { datauri: false, compact: true, persist: true });
     }
+
+    // perform resizing for preview with sharp library
+    const res = await sharp(inPath).resize({ width: 1080 }).toFile(outPath);
+
+    return outPath;
 }
 
-async function performConversions(image) {
-    if(isRawFormat(image.relativePath)) {
-        return await generatePreview(image);
-    } else {
-        return image;
+async function generateThumbnail(image) {
+    const inPath = image.previewPath;
+    const outPath = inPath.replace('_preview', '_thumb');
+
+    const res = await sharp(inPath).resize({ width: 120 }).toFile(outPath);
+
+    return outPath;
+}
+
+async function performConversions(image, tempDir) {
+    // generate preview and thumbnail images
+    console.log('generating preview');
+    image.previewPath = await generatePreview(tempDir, image);
+
+    console.log('generating thumb');
+    image.thumbnailPath = await generateThumbnail(image);
+
+    return image;
+}
+
+function getProjectTempDir(project){
+    // folder to store converted files
+    const tempDir = path.join(os.tmpdir(), 'keeper', slugify(project.name));
+
+    // make temp dir if it does not exist
+    if(!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir, {recursive: true});
     }
+
+    return tempDir;
 }
 
 
@@ -94,11 +130,12 @@ async function createProject(event, {name, basePath, exportPath}) {
             id: project.nextId,
             keep: false,
             previewPath: null,
+            thumbnailPath: null,
             path,
             relativePath
         };
 
-        image = await performConversions(image);
+        image = await performConversions(image, getProjectTempDir(project));
         project.images = [
             ...project.images,
             image,
@@ -137,7 +174,7 @@ async function createProject(event, {name, basePath, exportPath}) {
         writeProjectFile(project);
 
     } catch (e) {
-        return {err: e.message};
+        return { err: e };
     }
 
     return { project };
@@ -145,7 +182,7 @@ async function createProject(event, {name, basePath, exportPath}) {
 
 async function openProject(event, filePath) {
     try {
-        const project = readProjectFile(filePath)
+        const project = readProjectFile(filePath);
 
         //check images for missing previews
         const entryCount = project.images.length;
@@ -158,15 +195,15 @@ async function openProject(event, filePath) {
                 total: entryCount,
                 current: currentEntry
             });
-            if(image.previewPath) {
-                if(!fs.existsSync(image.previewPath)) {
-                    window.webContents.send('progress', {
-                        message: 'Regenerating image preview...',
-                        total: entryCount,
-                        current: currentEntry
-                    });
-                    project.images[i] = await generatePreview(image);
-                }
+
+            // check if preview or thumbnail no longer exist, and regenerate
+            if(!fs.existsSync(image.previewPath) || ! fs.existsSync(image.thumbnailPath)) {
+                window.webContents.send('progress', {
+                    message: 'Regenerating image preview...',
+                    total: entryCount,
+                    current: currentEntry
+                });
+                project.images[i] = await performConversions(image, getProjectTempDir(project));
             }
         }
 

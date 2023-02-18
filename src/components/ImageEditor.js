@@ -1,7 +1,7 @@
 import { Check, Clear } from "@mui/icons-material";
 import { Button, ButtonGroup, Paper, styled } from "@mui/material";
 import { Box } from "@mui/system";
-import { getImagePath } from "../lib/helpers";
+import { atomize } from "../lib/helpers";
 
 const ImageHolder = styled(Paper)(() => ({
     flexGrow: 1,
@@ -34,7 +34,7 @@ export default function ImageEditor({ image , onImageAction }) {
     return (
         <MainContainer>
             <ImageHolder>
-                <Image src={getImagePath(image)} alt='Currently selected, full size'></Image>
+                <Image src={atomize(image.previewPath)} alt='Currently selected, full size'></Image>
             </ImageHolder>
             <Paper sx={{
                 flexGrow: 1,

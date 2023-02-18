@@ -8,7 +8,7 @@ function slugify(str) {
 
     // Remove accents, swap ñ for n, etc
     var from = "ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆÍÌÎÏŇÑÓÖÒÔÕØŘŔŠŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇíìîïňñóöòôõøðřŕšťúůüùûýÿžþÞĐđßÆa·/_,:;";
-    var to   = "AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa------";
+    var to   = "AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa--_---";
     for (var i=0, l=from.length ; i<l ; i++) {
         str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
     }
@@ -23,8 +23,8 @@ function slugify(str) {
     return str;
 }
 
-function getImagePath(image) {
-    return `atom://${image.previewPath ? image.previewPath : image.path}`
+function atomize(path) {
+    return `atom://${path}`;
 }
 
 const rollingIncrement = (current, start, end, decrement = false) => {
@@ -41,8 +41,8 @@ const rollingIncrement = (current, start, end, decrement = false) => {
 
 const helpers = {
     slugify,
-    getImagePath,
     rollingIncrement,
+    atomize,
 }
 
 module.exports = helpers;

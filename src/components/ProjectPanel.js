@@ -1,6 +1,6 @@
 import { Avatar, Button, ButtonGroup, Divider, Tooltip, List, ListItem, ListItemAvatar, ListItemText, Paper, Switch, useTheme, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { getImagePath } from "../lib/helpers";
+import { atomize } from "../lib/helpers";
 import { useOnScreen } from "../lib/hooks";
 
 import ProjectInfo from "./ProjectInfo";
@@ -56,7 +56,7 @@ export default function ProjectPanel({ project, selectedImage, shouldScroll, set
 
     const imageListItems = useMemo(() => {
         return project.images.map(image => {
-            const { id, relativePath, keep } = image;
+            const { id, relativePath, thumbnailPath, keep } = image;
             const selected = id === selectedImage;
     
             return <ListItem
@@ -76,7 +76,7 @@ export default function ProjectPanel({ project, selectedImage, shouldScroll, set
                             <Avatar
                                 variant='rounded'
                                 alt='Image Preview'
-                                src={getImagePath(image)}
+                                src={atomize(thumbnailPath)}
                                 sx={{
                                     '& img': {
                                         maxWidth: '100%',
