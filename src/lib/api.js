@@ -59,7 +59,7 @@ async function generatePreview(destDir, image) {
     }
 
     // perform resizing for preview with sharp library
-    const res = await sharp(inPath).resize({ width: 1080 }).toFile(outPath);
+    const res = await sharp(inPath).rotate().resize({ width: 1080 }).toFile(outPath);
 
     return outPath;
 }
@@ -75,10 +75,7 @@ async function generateThumbnail(image) {
 
 async function performConversions(image, tempDir) {
     // generate preview and thumbnail images
-    console.log('generating preview');
     image.previewPath = await generatePreview(tempDir, image);
-
-    console.log('generating thumb');
     image.thumbnailPath = await generateThumbnail(image);
 
     return image;
