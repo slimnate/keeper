@@ -148,8 +148,12 @@ async function createProject(event, {name, basePath, exportPath}) {
             return openProject(null, project.projectFile);
         }
 
+        // filter out all non-image files
+        const entries = fs.readdirSync(basePath, {withFileTypes: true}).filter(entry => {
+            return entry.isFile() && isImageFile(entry.name);
+        });
+
         // loop through files in folder to find images
-        const entries = fs.readdirSync(basePath, {withFileTypes: true});
         const entryCount = entries.length;
         let currentEntry = 0;
         for(const entry of entries) {
@@ -159,13 +163,8 @@ async function createProject(event, {name, basePath, exportPath}) {
                 total: entryCount,
                 current: currentEntry
             });
-            if(entry.isFile()){
-                const name = entry.name;
-                if(isImageFile(name)) {
-                    // add to project
-                    await addImageToProject(path.join(basePath, name), name);
-                }
-            }
+            // add to project
+            await addImageToProject(path.join(basePath, entry.name), entry.name);
         };
 
         writeProjectFile(project);
