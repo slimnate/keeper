@@ -46,6 +46,24 @@ function isRawFormat(name) {
     return RAW_FORMATS.includes(path.extname(name).toLowerCase());
 }
 
+/**
+ * Gets the width and height of an image taking into account it's exif orientation
+ * 
+ * https://sharp.pixelplumbing.com/api-input#metadata
+ * @typedef SharpMeta
+ * @property {number} width
+ * @property {number} height
+ * @property {0|1|2|3|4|5|6|7|8} orientation
+ * 
+ * @param {SharpMeta} meta 
+ * @returns {{width: number, height: number}}
+ */
+function getNormalSize({ width, height, orientation }) {
+  return (orientation || 0) >= 5
+    ? { width: height, height: width }
+    : { width, height };
+}
+
 async function generatePreview(destDir, image) {
     let inPath = image.relativePath;
     const inFileName = path.basename(inPath, path.extname(inPath))
@@ -59,7 +77,17 @@ async function generatePreview(destDir, image) {
     }
 
     // perform resizing for preview with sharp library
-    const res = await sharp(inPath).rotate().resize({ width: 1080 }).toFile(outPath);
+    const sharpImage = sharp(inPath)
+    const { width, height } = getNormalSize(await sharpImage.metadata());
+    const isLandscape = width > height;
+
+    // shrink image by a factor of 4, with a min width of 1024 for landscape and 768 for portrait
+    const requestedWidth = Math.floor(isLandscape ? Math.max(1024, width / 4) : Math.max(768, height / 4));
+    
+    const res = await sharpImage
+        .rotate()
+        .resize({ width: requestedWidth })
+        .toFile(outPath);
 
     return outPath;
 }
@@ -68,7 +96,10 @@ async function generateThumbnail(image) {
     const inPath = image.previewPath;
     const outPath = inPath.replace('_preview', '_thumb');
 
-    const res = await sharp(inPath).resize({ width: 120 }).toFile(outPath);
+    const res = await sharp(inPath)
+        .rotate()
+        .resize({ width: 80 })
+        .toFile(outPath);
 
     return outPath;
 }
