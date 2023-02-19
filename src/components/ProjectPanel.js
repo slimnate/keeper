@@ -77,13 +77,6 @@ export default function ProjectPanel({ project, selectedImage, shouldScroll, set
                                 variant='rounded'
                                 alt='Image Preview'
                                 src={atomize(thumbnailPath)}
-                                sx={{
-                                    '& img': {
-                                        maxWidth: '100%',
-                                        maxHeight: '100%',
-                                        height: 'auto',
-                                    },
-                                }}
                             />
                         </ListItemAvatar>
                         <ListItemText>{relativePath}</ListItemText>
