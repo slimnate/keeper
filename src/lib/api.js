@@ -65,8 +65,8 @@ function getNormalSize({ width, height, orientation }) {
 }
 
 async function generatePreview(destDir, image) {
-    let inPath = image.relativePath;
-    const inFileName = path.basename(inPath, path.extname(inPath))
+    let inPath = image.path;
+    const inFileName = path.basename(image.relativePath, path.extname(inPath))
     const outPath = path.join(destDir, `${inFileName}_preview.jpg`);
     const isRaw = isRawFormat(inPath);
 
@@ -77,7 +77,7 @@ async function generatePreview(destDir, image) {
     }
 
     // perform resizing for preview with sharp library
-    const sharpImage = sharp(inPath)
+    const sharpImage = sharp(inPath);
     const { width, height } = getNormalSize(await sharpImage.metadata());
     const isLandscape = width > height;
 
@@ -201,6 +201,7 @@ async function createProject(event, {name, basePath, exportPath}) {
         writeProjectFile(project);
 
     } catch (e) {
+        console.log({e});
         return { err: e };
     }
 
@@ -239,7 +240,8 @@ async function openProject(event, filePath) {
 
         return { project };
     } catch (e) {
-        return { err: e.message };
+        console.log({e});
+        return { err: e };
     }
 }
 
@@ -284,8 +286,8 @@ function exportProject(event, project) {
 
         return { result: { imageCount } }
     } catch (e) {
-        console.log({e})
-        return {err: e.message}
+        console.log({e});
+        return {err: e};
     }
 }
 
