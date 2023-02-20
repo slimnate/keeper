@@ -6,6 +6,7 @@ const { slugify } = require('./helpers');
 const extractd = require('extractd');
 const IpcApi = require('slim-electron-ipc-api');
 const sharp = require('sharp');
+const { createProgressNotifier } = require('./progress');
 
 const STANDARD_FORMATS = ['.png', '.gif', '.jpg', '.jpeg', ];
 const RAW_FORMATS = ['.cr2', '.cr3', '.rw2', '.arw', '.nef', '.dng'];
@@ -18,6 +19,10 @@ let window = null;
 
 function setWindow(win) {
     window = win;
+}
+
+function sendProgressMessage (data) {
+    window.webContents.send('progress', data);
 }
 
 //PRIVATE functions
@@ -84,7 +89,7 @@ async function generatePreview(destDir, image) {
     // shrink image by a factor of 4, with a min width of 1024 for landscape and 768 for portrait
     const requestedWidth = Math.floor(isLandscape ? Math.max(1024, width / 4) : Math.max(768, height / 4));
     
-    const res = await sharpImage
+    await sharpImage
         .rotate()
         .resize({ width: requestedWidth })
         .toFile(outPath);
@@ -96,7 +101,7 @@ async function generateThumbnail(image) {
     const inPath = image.previewPath;
     const outPath = inPath.replace('_preview', '_thumb');
 
-    const res = await sharp(inPath)
+    await sharp(inPath)
         .rotate()
         .resize({ width: 80 })
         .toFile(outPath);
@@ -184,18 +189,16 @@ async function createProject(event, {name, basePath, exportPath}) {
             return entry.isFile() && isImageFile(entry.name);
         });
 
+        // set up progress notifier
+        const progress = createProgressNotifier(entries.length, sendProgressMessage);
+        progress.start();
+        
         // loop through files in folder to find images
-        const entryCount = entries.length;
-        let currentEntry = 0;
         for(const entry of entries) {
-            currentEntry++;
-            window.webContents.send('progress', {
-                message: 'Generating image preview...',
-                total: entryCount,
-                current: currentEntry
-            });
+            progress.notify('Generating image preview...');
             // add to project
             await addImageToProject(path.join(basePath, entry.name), entry.name);
+            progress.next();
         };
 
         writeProjectFile(project);
@@ -213,26 +216,22 @@ async function openProject(event, filePath) {
         const project = readProjectFile(filePath);
 
         //check images for missing previews
-        const entryCount = project.images.length;
-        let currentEntry = 0;
+        const progress = createProgressNotifier(project.images.length, sendProgressMessage);
+        progress.start();
+
         for(const i in project.images) {
-            currentEntry++;
+            progress.notify('Validating image...');
+
             const image = project.images[i];
-            window.webContents.send('progress', {
-                message: 'Validating image...',
-                total: entryCount,
-                current: currentEntry
-            });
 
             // check if preview or thumbnail no longer exist, and regenerate
             if(!fs.existsSync(image.previewPath) || ! fs.existsSync(image.thumbnailPath)) {
-                window.webContents.send('progress', {
-                    message: 'Regenerating image preview...',
-                    total: entryCount,
-                    current: currentEntry
-                });
+                // notify and perform conversions
+                progress.notify('Regenerating image preview...');
                 project.images[i] = await performConversions(image, getProjectTempDir(project));
             }
+
+            progress.next();
         }
 
         //re-save project file to update image paths

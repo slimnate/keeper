@@ -204,6 +204,9 @@ function App() {
                   <Typography variant='overline' fontSize={18}>
                     {progress.current} of {progress.total}
                   </Typography>
+                  <Typography variant='overline' fontSize={18}>
+                    Estimated time remaining: {progress.remaining}
+                  </Typography>
                 </>
               )}
               {!progress && (
