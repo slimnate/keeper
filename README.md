@@ -1,5 +1,5 @@
-# Keeper - Photo Organizer
-Keeper is an open source application designed to help photographers organize the images from a photo shoot. It provides the ability to preview the images in a given folder, marking each as "keep" or "discard", and then allows the user to export only the images marked "keep" to a new sub-folder.
+# Keeper - Image Culling
+Keeper is an open source application designed to help photographers cull images from a photo shoot. It provides the ability to preview the images in a given folder, marking each as "keep" or "discard", and then allows the user to export only the images marked "keep" to a new sub-folder.
 
 ## Installation
 
